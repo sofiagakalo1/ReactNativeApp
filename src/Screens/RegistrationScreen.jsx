@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {
   StyleSheet,
   Text,
@@ -7,39 +7,47 @@ import {
   TextInput,
   Button,
   TouchableOpacity,
-  Platform
+  Platform,
+  KeyboardAvoidingView,
 } from "react-native";
 
 const RegistrationScreen = () => {
-  console.log(Platform.OS)
+  // console.log(Platform.OS);
+  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   return (
     <View style={styles.container}>
       <ImageBackground
         source={require("../images/registrationbg.jpg")}
         style={styles.image}
       >
-        <View style={styles.form}>
-          <Text style={styles.headerText}>Регистрация</Text>
-          <View style={{ marginTop: 33 }}>
-            <TextInput style={styles.input} placeholder="Логин" />
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          <View style={styles.form}>
+            <Text style={styles.headerText}>Регистрация</Text>
+            <View style={{ marginTop: 33 }}>
+              <TextInput style={styles.input} placeholder="Логин" onFocus={()=>setIsShowKeyboard(true)}/>
+            </View>
+            <View style={{ marginTop: 16 }}>
+              <TextInput
+                style={styles.input}
+                placeholder="Адрес электронной почты"
+                onFocus={()=>setIsShowKeyboard(true)}
+              />
+            </View>
+            <View style={{ marginTop: 16 }}>
+              <TextInput
+                style={styles.input}
+                placeholder="Пароль"
+                onFocus={()=>setIsShowKeyboard(true)}
+                secureTextEntry={true}
+              />
+            </View>
+            <TouchableOpacity activeOpacity={0.8} style={styles.btn}>
+              <Text style={styles.btn_text}>Зарегистрироваться</Text>
+            </TouchableOpacity>
           </View>
-          <View style={{ marginTop: 16 }}>
-            <TextInput
-              style={styles.input}
-              placeholder="Адрес электронной почты"
-            />
-          </View>
-          <View style={{ marginTop: 16 }}>
-            <TextInput
-              style={styles.input}
-              placeholder="Пароль"
-              secureTextEntry={true}
-            />
-          </View>
-          <TouchableOpacity activeOpacity={0.8} style={styles.btn}>
-            <Text style={styles.btn_text}>Зарегистрироваться</Text>
-          </TouchableOpacity>
-        </View>
+        </KeyboardAvoidingView>
       </ImageBackground>
     </View>
   );
