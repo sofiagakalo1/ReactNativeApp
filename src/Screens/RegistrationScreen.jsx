@@ -8,9 +8,11 @@ import {
   TouchableOpacity,
   Keyboard,
   TouchableWithoutFeedback,
+  KeyboardAvoidingView,
 } from "react-native";
 
 import Button from "../../src/components/Button";
+import AddAvatarPhotoButtonIcon from "../components/icons/AddAvatarPhotoButtonIcon";
 
 const initialState = {
   email: "",
@@ -47,94 +49,98 @@ const RegistrationScreen = () => {
   };
 
   return (
-    //   <KeyboardAvoidingView
-    //   behavior={Platform.OS === "ios" ? "padding" : "height"}
-    // >
     <TouchableWithoutFeedback onPress={hideKeyboard}>
       <View style={styles.container}>
         <ImageBackground
           source={require("../images/registrationbg.jpg")}
           style={styles.image}
         >
-          <View
-            style={{ ...styles.form, marginBottom: isShowKeyboard ? -170 : 0 }}
-          >
-            <View style={styles.header}>
-              <View style={styles.photoBox}>
-                <TouchableOpacity
-                  style={styles.addBtn}
-                  activeOpacity={0.8}
-                  onPress={() => console.log("add photo")}
-                ></TouchableOpacity>
+          <KeyboardAvoidingView behavior={"padding"}>
+            <View
+              style={{
+                ...styles.form,
+              }}
+            >
+              <View style={styles.header}>
+                <View style={styles.photoBox}>
+                  <TouchableOpacity
+                    style={styles.addBtn}
+                    activeOpacity={0.8}
+                    onPress={() => console.log("add photo")}
+                  >
+                    <AddAvatarPhotoButtonIcon />
+                  </TouchableOpacity>
+                </View>
+                <Text style={styles.headerText}>Регистрация</Text>
               </View>
-              <Text style={styles.headerText}>Регистрация</Text>
+              <View>
+                <TextInput
+                  style={
+                    isFocused.login
+                      ? [styles.input, styles.inputFocused]
+                      : styles.input
+                  }
+                  placeholder="Логин"
+                  placeholderTextColor="#BDBDBD"
+                  onFocus={() => handleInputFocus("login")}
+                  onBlur={() => handleInputBlur("login")}
+                />
+              </View>
+              <View style={{ marginTop: 16 }}>
+                <TextInput
+                  style={
+                    isFocused.email
+                      ? [styles.input, styles.inputFocused]
+                      : styles.input
+                  }
+                  placeholder="Адрес электронной почты"
+                  placeholderTextColor="#BDBDBD"
+                  // value={state.email}
+                  onFocus={() => handleInputFocus("email")}
+                  onBlur={() => handleInputBlur("email")}
+                />
+              </View>
+              <View style={{ marginTop: 16 }}>
+                <TextInput
+                  style={
+                    isFocused.password
+                      ? [styles.input, styles.inputFocused]
+                      : styles.input
+                  }
+                  placeholder="Пароль"
+                  placeholderTextColor="#BDBDBD"
+                  // value={state.password}
+                  onFocus={() => handleInputFocus("password")}
+                  onBlur={() => handleInputBlur("password")}
+                  secureTextEntry={isShowPassword ? false : true}
+                />
+                <Button
+                  style={styles.showPasswordButton}
+                  styleForButton={styles.showPasswordBtn}
+                  styleForText={styles.showPasswordBtnText}
+                  text={isShowPassword ? "Скрыть" : "Показать"}
+                  onPress={() => setIsShowPassword(!isShowPassword)}
+                />
+              </View>
+              <View>
+                <Button
+                  styleForButton={styles.registerBtn}
+                  styleForText={styles.registerBtnText}
+                  text={"Зарегистрироваться"}
+                  // onPress={() => hideKeyboard}
+                />
+                <Button
+                  styleForButton={styles.linkBtn}
+                  styleForText={styles.linkBtnText}
+                  text={"Уже есть аккаунт? Войти"}
+                  // onPress={}
+                />
+              </View>
             </View>
-            <View>
-              <TextInput
-                style={
-                  isFocused.login
-                    ? [styles.input, styles.inputFocused]
-                    : styles.input
-                }
-                placeholder="Логин"
-                placeholderTextColor="#BDBDBD"
-                onFocus={() => handleInputFocus("login")}
-                onBlur={() => handleInputBlur("login")}
-              />
-            </View>
-            <View style={{ marginTop: 16 }}>
-              <TextInput
-                style={
-                  isFocused.email
-                    ? [styles.input, styles.inputFocused]
-                    : styles.input
-                }
-                placeholder="Адрес электронной почты"
-                placeholderTextColor="#BDBDBD"
-                // value={state.email}
-                onFocus={() => handleInputFocus("email")}
-                onBlur={() => handleInputBlur("email")}
-              />
-            </View>
-            <View style={{ marginTop: 16 }}>
-              <TextInput
-                style={
-                  isFocused.password
-                    ? [styles.input, styles.inputFocused]
-                    : styles.input
-                }
-                placeholder="Пароль"
-                placeholderTextColor="#BDBDBD"
-                // value={state.password}
-                onFocus={() => handleInputFocus("password")}
-                onBlur={() => handleInputBlur("password")}
-                secureTextEntry={isShowPassword ? false : true}
-              />
-              <Button
-                style={styles.showPasswordButton}
-                styleForButton={styles.showPasswordBtn}
-                styleForText={styles.showPasswordBtnText}
-                text={isShowPassword ? "Скрыть" : "Показать"}
-                onPress={() => setIsShowPassword(!isShowPassword)}
-              />
-            </View>
-            <Button
-              styleForButton={styles.registerBtn}
-              styleForText={styles.registerBtnText}
-              text={"Зарегистрироваться"}
-              // onPress={hideKeyboard}
-            />
-            <Button
-              styleForButton={styles.linkBtn}
-              styleForText={styles.linkBtnText}
-              text={"Уже есть аккаунт? Войти"}
-              // onPress={}
-            />
-          </View>
+          </KeyboardAvoidingView>
         </ImageBackground>
       </View>
     </TouchableWithoutFeedback>
-    // </KeyboardAvoidingView>
   );
 };
 
