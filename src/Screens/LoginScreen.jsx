@@ -12,19 +12,26 @@ import {
 
 import Button from "../../src/components/Button";
 
-// const initialState = {
-//   email: "",
-//   password: "",
-// };
+const initialState = {
+  email: "",
+  password: "",
+};
 
 const RegistrationScreen = () => {
-  // const [state, setstate] = useState(initialState);
+  const [state, setState] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isFocused, setIsFocused] = useState({
     email: false,
     password: false,
   });
+
+  const handleSubmit = () => {
+    Keyboard.dismiss();
+    setIsShowKeyboard(false);
+    console.log(state);
+    setState(initialState);
+  };
 
   const hideKeyboard = () => {
     Keyboard.dismiss();
@@ -70,9 +77,12 @@ const RegistrationScreen = () => {
                   }
                   placeholder="Адрес электронной почты"
                   placeholderTextColor="#BDBDBD"
-                  // value={state.email}
+                  value={state.email}
                   onFocus={() => handleInputFocus("email")}
                   onBlur={() => handleInputBlur("email")}
+                  onChangeText={(value) => {
+                    setState((prevState) => ({ ...prevState, email: value }));
+                  }}
                 />
               </View>
               <View style={{ marginTop: 16 }}>
@@ -84,9 +94,12 @@ const RegistrationScreen = () => {
                   }
                   placeholder="Пароль"
                   placeholderTextColor="#BDBDBD"
-                  // value={state.password}
+                  value={state.password}
                   onFocus={() => handleInputFocus("password")}
                   onBlur={() => handleInputBlur("password")}
+                  onChangeText={(value) =>
+                    setState((prevState) => ({ ...prevState, password: value }))
+                  }
                   secureTextEntry={isShowPassword ? false : true}
                 />
                 <Button
@@ -102,7 +115,7 @@ const RegistrationScreen = () => {
                   styleForButton={styles.loginBtn}
                   styleForText={styles.loginBtnText}
                   text={"Войти"}
-                  // onPress={() => hideKeyboard}
+                  onPress={handleSubmit}
                 />
                 <Button
                   styleForButton={styles.linkBtn}
