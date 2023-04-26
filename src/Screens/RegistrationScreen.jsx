@@ -14,15 +14,15 @@ import {
 import Button from "../../src/components/Button";
 import AddAvatarPhotoButtonIcon from "../components/icons/AddAvatarPhotoButtonIcon";
 
-const initialState = {
-  email: "",
-  password: "",
-  name: "",
-};
+// const initialState = {
+//   login: "",
+//   email: "",
+//   password: "",
+// };
 
 const RegistrationScreen = () => {
   // console.log(Platform.OS);
-  const [state, setstate] = useState(initialState);
+  // const [state, setstate] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isFocused, setIsFocused] = useState({
@@ -40,6 +40,7 @@ const RegistrationScreen = () => {
     setIsFocused({
       [inputKeyName]: true,
     });
+    setIsShowKeyboard(true);
   };
 
   const handleInputBlur = (inputKeyName) => {
@@ -59,15 +60,12 @@ const RegistrationScreen = () => {
             <View
               style={{
                 ...styles.form,
+                marginBottom: isShowKeyboard ? -175 : 0,
               }}
             >
               <View style={styles.header}>
                 <View style={styles.photoBox}>
-                  <TouchableOpacity
-                    style={styles.addBtn}
-                    activeOpacity={0.8}
-                    onPress={() => console.log("add photo")}
-                  >
+                  <TouchableOpacity style={styles.addBtn} activeOpacity={0.8}>
                     <AddAvatarPhotoButtonIcon />
                   </TouchableOpacity>
                 </View>
