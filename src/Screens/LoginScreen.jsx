@@ -146,6 +146,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
+
   },
   header: {
     alignItems: "center",
@@ -155,6 +156,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 40,
     color: "#212121",
+    fontFamily: 'Roboto-medium-500',
   },
   input: {
     borderWidth: 1,
@@ -184,6 +186,7 @@ const styles = StyleSheet.create({
     color: "#1B4371",
     fontSize: 16,
     lineHeight: 19,
+    fontFamily: 'Roboto-regular-400',
   },
   loginBtn: {
     backgroundColor: "#FF6C00",
@@ -198,6 +201,7 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 16,
     lineHeight: 19,
+    fontFamily: 'Roboto-regular-400',
   },
   linkBtn: {
     marginTop: 16,
@@ -209,6 +213,7 @@ const styles = StyleSheet.create({
     color: "#1B4371",
     fontSize: 16,
     lineHeight: 19,
+    fontFamily: 'Roboto-regular-400',
   },
 });
 
