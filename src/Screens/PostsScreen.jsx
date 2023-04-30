@@ -9,6 +9,7 @@ import {
   ScrollView,
   Dimensions,
 } from "react-native";
+import { FlatList } from "react-native";
 
 import { SimpleLineIcons, Feather } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -19,49 +20,72 @@ const Tab = createBottomTabNavigator();
 const windowHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
 
-const Tabs = createBottomTabNavigator();
+const user = {
+  id: "00034242",
+  email: "email@example.com",
+  nickname: "Natali Romanova",
+  photo: require("../images/User.jpg"),
+};
 
 const userPosts = [
   {
     id: "1",
-    photo: "https://placekitten.com/g/639/480",
-    title: "My cat",
+    photo: require("../images/my-post-1.jpeg"),
+    title: "Лес",
     location: "Ivano-Frankivs'k Region, Ukraine",
-    comments: "19",
-    likes: "322",
+    comments: "32",
+    likes: "32",
   },
   {
     id: "2",
-    photo: "https://placekitten.com/g/640/480",
-    title: "My cat 2",
-    location: "Ivano-Frankivs'k Region, Ukraine",
-    comments: "8",
+    photo: require("../images/my-post-2.jpeg"),
+    title: "Закат на Черном море",
+    location: "Ukraine",
+    comments: "88",
     likes: "32",
   },
   {
     id: "3",
-    photo: "https://placekitten.com/g/641/480",
-    title: "My cat 3",
-    location: "Kyiv, Ukraine",
-    comments: "10",
+    photo: require("../images/my-post-3.jpeg"),
+    title: "Старый домик в Венеции",
+    location: "Italy",
+    comments: "98",
     likes: "32",
-  },
-  {
-    id: "4",
-    photo: "https://placekitten.com/g/649/480",
-    title: "My cat 3",
-    location: "Kyiv, Ukraine",
-    comments: "33",
-    likes: "71",
   },
 ];
 
 const PostsScreen = () => {
-//   const {
-//     params: { login, email },
-//   } = useRoute();
+  const { email, nickname, photo } = user;
+  const renderItem = ({ item }) => {
+    return (
+      <View style={styles.postContainer}>
+        <Image source={item.photo} style={styles.postImage} />
+        <View style={styles.postInfoContainer}>
+          <Text style={styles.postTitle}>{item.title}</Text>
+          <View style={styles.postInfo}>
+            <View style={styles.postComments}>
+              <Text style={styles.postCommentsCount}>{item.comments}</Text>
+              <SimpleLineIcons
+                style={{
+                  transform: [{ rotateY: "180deg" }],
+                }}
+                name="bubble"
+                size={18}
+                color="#BDBDBD"
+              />
+            </View>
+            <View style={styles.postLocation}>
+              <Text style={styles.postLocationText}>{item.location}</Text>
+              <SimpleLineIcons name="location-pin" size={18} color="#BDBDBD" />
+            </View>
+          </View>
+        </View>
+      </View>
+    );
+  };
 
   return (
+    <ScrollView>
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Публикации</Text>
@@ -71,17 +95,22 @@ const PostsScreen = () => {
       </View>
       <View style={styles.userContainer}>
         <View>
-          <Image
-            source={require("../images/User.jpg")}
-            style={styles.userPhoto}
-          />
+          <Image source={photo} style={styles.userPhoto} />
         </View>
         <View style={styles.userInfoContainer}>
-          <Text style={styles.loginName}>lalala</Text>
-          <Text style={styles.loginEmail}>blalalal</Text>
+          <Text style={styles.loginName}>{nickname}</Text>
+          <Text style={styles.loginEmail}>{email}</Text>
         </View>
       </View>
+      <FlatList
+        data={userPosts}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        style={styles.postList}
+        contentContainerStyle={styles.postListContent}
+      />
     </View>
+    </ScrollView>
   );
 };
 
@@ -90,7 +119,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     // justifyContent: "center",
-    backgroundColor: "#E5E5E5",
+    // backgroundColor: "#E5E5E5",
   },
   header: {
     position: "absolute",
@@ -153,37 +182,59 @@ const styles = StyleSheet.create({
     lineHeight: 13,
     color: "rgba(33, 33, 33, 0.8)",
   },
-  userPosts: {
-    paddingLeft: 26,
-    paddingRight: 26,
+  postListContent: {
+    // backgroundColor: "red",
+    width: screenWidth,
     marginBottom: 32,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  postsPhoto: {
-    width: 340,
-    height: 230,
+  postContainer: {
+    marginBottom: 34,
+    // paddingHorizontal: 16,
+  },
+  postImage: {
+    width: 343,
+    height: 240,
     borderRadius: 8,
   },
-  postsTitle: {
-    // fontFamily: "Roboto-Medium",
+  postInfoContainer: {
     marginTop: 8,
-    marginBottom: 12,
+  },
+  postsTitle: {
+    fontFamily: "Roboto-medium-500",
+    fontSize:16,
+    lineHeight:18.75,
   },
   postInfo: {
     flexDirection: "row",
     justifyContent: "space-between",
-    padding: 2,
     paddingRight: 8,
+    marginTop:11,
   },
-  feedback: { flexDirection: "row", gap: 8, marginRight: 10 },
-  comments: { flexDirection: "row-reverse", alignItems: "center", gap: 4 },
-  commentsCount: {
-    // fontFamily: "Roboto-Regular",
+  postComments: {
+    flexDirection: "row-reverse",
+    alignItems: "center",
+    // gap: 5,
+  },
+  postCommentsCount: {
+    fontFamily: "Roboto-regular-400",
     color: "#BDBDBD",
+    marginLeft:5,
+    fontSize:16,
+    lineHeight:18.75,
   },
-  location: { flexDirection: "row", alignItems: "center", gap: 4 },
-  locationText: {
-    // fontFamily: "Roboto-Regular",
+  postLocation: {
+    flexDirection: "row",
+    alignItems: "center",
+    // gap: 4,
+  },
+  postLocationText: {
+    fontFamily: "Roboto-regular-400",
     textDecorationLine: "underline",
+    marginRight:5,
+    fontSize:16,
+    lineHeight:18.75,
   },
 });
 
