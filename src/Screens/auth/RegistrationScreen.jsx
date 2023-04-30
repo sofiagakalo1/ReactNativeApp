@@ -5,31 +5,41 @@ import {
   View,
   ImageBackground,
   TextInput,
+  TouchableOpacity,
   Keyboard,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
 } from "react-native";
 
-import Button from "../../src/components/Button";
+import { useNavigation } from "@react-navigation/native";
+
+import Button from "../../components/Button";
+import AddAvatarPhotoButtonIcon from "../../components/icons/AddAvatarPhotoButtonIcon";
 
 const initialState = {
+  login: "",
   email: "",
   password: "",
 };
 
 const RegistrationScreen = () => {
+  // console.log(Platform.OS);
   const [state, setState] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isFocused, setIsFocused] = useState({
+    login: false,
     email: false,
     password: false,
   });
+
+  const navigation = useNavigation();
 
   const handleSubmit = () => {
     Keyboard.dismiss();
     setIsShowKeyboard(false);
     console.log(state);
+    navigation.navigate("Home");
     setState(initialState);
   };
 
@@ -55,18 +65,40 @@ const RegistrationScreen = () => {
     <TouchableWithoutFeedback onPress={hideKeyboard}>
       <View style={styles.container}>
         <ImageBackground
-          source={require("../images/registrationbg.jpg")}
+          source={require("../../images/registrationbg.jpg")}
           style={styles.image}
         >
           <KeyboardAvoidingView behavior={"padding"}>
             <View
               style={{
                 ...styles.form,
-                marginBottom: isShowKeyboard ? -241 : 0,
+                marginBottom: isShowKeyboard ? -90 : 0,
               }}
             >
               <View style={styles.header}>
-                <Text style={styles.headerText}>Войти</Text>
+                <View style={styles.photoBox}>
+                  <TouchableOpacity style={styles.addBtn} activeOpacity={0.8}>
+                    <AddAvatarPhotoButtonIcon />
+                  </TouchableOpacity>
+                </View>
+                <Text style={styles.headerText}>Регистрация</Text>
+              </View>
+              <View>
+                <TextInput
+                  style={
+                    isFocused.login
+                      ? [styles.input, styles.inputFocused]
+                      : styles.input
+                  }
+                  placeholder="Логин"
+                  placeholderTextColor="#BDBDBD"
+                  value={state.login}
+                  onFocus={() => handleInputFocus("login")}
+                  onBlur={() => handleInputBlur("login")}
+                  onChangeText={(value) => {
+                    setState((prevState) => ({ ...prevState, login: value }));
+                  }}
+                />
               </View>
               <View style={{ marginTop: 16 }}>
                 <TextInput
@@ -112,16 +144,16 @@ const RegistrationScreen = () => {
               </View>
               <View>
                 <Button
-                  styleForButton={styles.loginBtn}
-                  styleForText={styles.loginBtnText}
-                  text={"Войти"}
+                  styleForButton={styles.registerBtn}
+                  styleForText={styles.registerBtnText}
+                  text={"Зарегистрироваться"}
                   onPress={handleSubmit}
                 />
                 <Button
                   styleForButton={styles.linkBtn}
                   styleForText={styles.linkBtnText}
-                  text={"Нет аккаунта? Зарегистрироваться"}
-                  // onPress={}
+                  text={"Уже есть аккаунт? Войти"}
+                  onPress={() => navigation.navigate("Login")}
                 />
               </View>
             </View>
@@ -146,17 +178,32 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-
   },
   header: {
     alignItems: "center",
-    marginTop: 32,
-    marginBottom: 33,
+    marginTop: 92,
+    marginBottom: 32,
   },
   headerText: {
     fontSize: 40,
     color: "#212121",
-    fontFamily: 'Roboto-medium-500',
+    fontFamily: "Roboto-medium-500",
+  },
+  photoBox: {
+    position: "absolute",
+    top: -152,
+    alignItems: "center",
+    width: 120,
+    height: 120,
+    backgroundColor: "#F6F6F6",
+    borderRadius: 16,
+  },
+  addBtn: {
+    position: "absolute",
+    bottom: 12,
+    right: -12,
+    height: 25,
+    width: 25,
   },
   input: {
     borderWidth: 1,
@@ -186,9 +233,9 @@ const styles = StyleSheet.create({
     color: "#1B4371",
     fontSize: 16,
     lineHeight: 19,
-    fontFamily: 'Roboto-regular-400',
+    fontFamily: "Roboto-regular-400",
   },
-  loginBtn: {
+  registerBtn: {
     backgroundColor: "#FF6C00",
     height: 51,
     borderRadius: 100,
@@ -197,15 +244,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  loginBtnText: {
+  registerBtnText: {
     color: "#FFFFFF",
     fontSize: 16,
     lineHeight: 19,
-    fontFamily: 'Roboto-regular-400',
+    fontFamily: "Roboto-regular-400",
   },
   linkBtn: {
     marginTop: 16,
-    marginBottom: 144,
+    marginBottom: 78,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -213,7 +260,7 @@ const styles = StyleSheet.create({
     color: "#1B4371",
     fontSize: 16,
     lineHeight: 19,
-    fontFamily: 'Roboto-regular-400',
+    fontFamily: "Roboto-regular-400",
   },
 });
 
