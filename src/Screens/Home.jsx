@@ -15,8 +15,8 @@ import PostsScreen from "./PostsScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 const Tab = createBottomTabNavigator();
 
-import NavProfileIcon from '../components/icons/NavProfileIcon';
-import NavPostsIcon from '../components/icons/NavPostsIcon';
+import NavProfileIcon from "../components/icons/NavProfileIcon";
+import NavPostsIcon from "../components/icons/NavPostsIcon";
 import NavAddIcon from "../components/icons/NavAddIcon";
 
 const Home = () => {
@@ -26,12 +26,14 @@ const Home = () => {
 
   return (
     <>
-      <Tab.Navigator screenOptions={{
-        tabBarShowLabel:false,
-        tabBarIcon: ({focused, color, size}) => {
-          return null; // return null to hide the icon
-      }
-      }}>
+      <Tab.Navigator
+        screenOptions={{
+          tabBarShowLabel: false,
+          tabBarIcon: ({ focused, color, size }) => {
+            return null; // return null to hide the icon
+          },
+        }}
+      >
         <Tab.Screen
           name="Posts"
           component={PostsScreen}

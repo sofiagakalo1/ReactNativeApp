@@ -3,19 +3,13 @@ import {
   StyleSheet,
   Text,
   View,
-  ImageBackground,
   TouchableOpacity,
   Image,
   ScrollView,
   Dimensions,
+  FlatList,
 } from "react-native";
-import { FlatList } from "react-native";
-
 import { SimpleLineIcons, Feather } from "@expo/vector-icons";
-import { useNavigation, useRoute } from "@react-navigation/native";
-
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-const Tab = createBottomTabNavigator();
 
 const windowHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
