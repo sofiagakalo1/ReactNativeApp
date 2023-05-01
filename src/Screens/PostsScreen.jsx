@@ -123,9 +123,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   header: {
-    // position: "absolute",
-    // top: 0,
-    // left: 0,
     width: screenWidth,
     height: 88,
     backgroundColor: "#FFFFFF",
@@ -181,7 +178,6 @@ const styles = StyleSheet.create({
     color: "rgba(33, 33, 33, 0.8)",
   },
   postListContent: {
-    // backgroundColor: "red",
     width: screenWidth,
     marginBottom: 32,
     justifyContent: "center",
@@ -189,7 +185,6 @@ const styles = StyleSheet.create({
   },
   postContainer: {
     marginBottom: 34,
-    // paddingHorizontal: 16,
   },
   postImage: {
     width: 343,
@@ -213,7 +208,6 @@ const styles = StyleSheet.create({
   postComments: {
     flexDirection: "row-reverse",
     alignItems: "center",
-    // gap: 5,
   },
   postCommentsCount: {
     fontFamily: "Roboto-regular-400",
@@ -225,7 +219,6 @@ const styles = StyleSheet.create({
   postLocation: {
     flexDirection: "row",
     alignItems: "center",
-    // gap: 4,
   },
   postLocationText: {
     fontFamily: "Roboto-regular-400",

@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
   screenContainer: {
     paddingHorizontal: 16,
     height: windowHeight,
-    alignContent:"center",
+    alignContent: "center",
   },
   header: {
     width: screenWidth,

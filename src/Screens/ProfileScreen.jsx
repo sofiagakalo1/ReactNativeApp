@@ -62,7 +62,12 @@ const ProfileScreen = () => {
           <View style={styles.postInfo}>
             <View style={styles.postInfo}>
               <View style={styles.postComments}>
-                <Text style={styles.postCommentsCount} onPress={() => navigation.navigate("Comments")}>{item.comments}</Text>
+                <Text
+                  style={styles.postCommentsCount}
+                  onPress={() => navigation.navigate("Comments")}
+                >
+                  {item.comments}
+                </Text>
                 <TouchableOpacity activeOpacity={0.8}>
                   <Feather
                     name="message-circle"
@@ -197,12 +202,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     width: screenWidth,
     marginBottom: 32,
-    // justifyContent: "center",
     alignItems: "center",
   },
   postContainer: {
     marginBottom: 34,
-    // paddingHorizontal: 16,
   },
   postImage: {
     width: 343,

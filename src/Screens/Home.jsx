@@ -63,7 +63,7 @@ const Home = () => {
         <Tab.Screen
           name="Comments"
           component={CommentsScreen}
-          options={({ navigation }) => ({
+          options={() => ({
             headerShown: false,
             tabBarButton: () => null,
             tabBarStyle: { display: "none" },
