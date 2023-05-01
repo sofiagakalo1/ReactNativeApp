@@ -9,6 +9,7 @@ import {
   Dimensions,
   FlatList,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { SimpleLineIcons, Feather } from "@expo/vector-icons";
 
 const windowHeight = Dimensions.get("window").height;
@@ -49,6 +50,7 @@ const userPosts = [
 ];
 
 const PostsScreen = () => {
+  const navigation = useNavigation();
   const { email, nickname, photo } = user;
   const renderItem = ({ item }) => {
     return (
@@ -58,7 +60,11 @@ const PostsScreen = () => {
           <Text style={styles.postTitle}>{item.title}</Text>
           <View style={styles.postInfo}>
             <View style={styles.postComments}>
-              <Text style={styles.postCommentsCount}>{item.comments}</Text>
+              <Text
+                style={styles.postCommentsCount} onPress={() => navigation.navigate("Comments")}
+              >
+                {item.comments}
+              </Text>
               <SimpleLineIcons
                 style={{
                   transform: [{ rotateY: "180deg" }],
@@ -79,7 +85,6 @@ const PostsScreen = () => {
   };
 
   return (
-    <ScrollView>
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Публикации</Text>
@@ -96,15 +101,18 @@ const PostsScreen = () => {
           <Text style={styles.loginEmail}>{email}</Text>
         </View>
       </View>
-      <FlatList
-        data={userPosts}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        style={styles.postList}
-        contentContainerStyle={styles.postListContent}
-      />
+      <ScrollView nestedScrollEnabled={true}>
+        <View>
+          <FlatList
+            data={userPosts}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+            style={styles.postList}
+            contentContainerStyle={styles.postListContent}
+          />
+        </View>
+      </ScrollView>
     </View>
-    </ScrollView>
   );
 };
 
@@ -112,25 +120,23 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    // justifyContent: "center",
-    // backgroundColor: "#E5E5E5",
+    backgroundColor: "#fff",
   },
   header: {
-    position: "absolute",
-    top: 0,
-    left: 0,
+    // position: "absolute",
+    // top: 0,
+    // left: 0,
     width: screenWidth,
     height: 88,
     backgroundColor: "#FFFFFF",
     alignItems: "center",
     justifyContent: "center",
-    // borderBottomColor: "#eee",
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(0, 0, 0, 0.3)",
   },
   headerText: {
     position: "absolute",
-    marginHorizontal: 140,
     top: 55,
-    marginBottom: 11,
     fontFamily: "Roboto-medium-500",
     fontSize: 17,
     lineHeight: 22,
@@ -146,9 +152,7 @@ const styles = StyleSheet.create({
     height: 24,
   },
   userContainer: {
-    // backgroundColor: "red",
     width: screenWidth,
-    marginTop: 88,
     height: 124,
     flexDirection: "row",
     alignContent: "center",
@@ -197,14 +201,14 @@ const styles = StyleSheet.create({
   },
   postsTitle: {
     fontFamily: "Roboto-medium-500",
-    fontSize:16,
-    lineHeight:18.75,
+    fontSize: 16,
+    lineHeight: 18.75,
   },
   postInfo: {
     flexDirection: "row",
     justifyContent: "space-between",
     paddingRight: 8,
-    marginTop:11,
+    marginTop: 11,
   },
   postComments: {
     flexDirection: "row-reverse",
@@ -214,9 +218,9 @@ const styles = StyleSheet.create({
   postCommentsCount: {
     fontFamily: "Roboto-regular-400",
     color: "#BDBDBD",
-    marginLeft:5,
-    fontSize:16,
-    lineHeight:18.75,
+    marginLeft: 5,
+    fontSize: 16,
+    lineHeight: 18.75,
   },
   postLocation: {
     flexDirection: "row",
@@ -226,9 +230,9 @@ const styles = StyleSheet.create({
   postLocationText: {
     fontFamily: "Roboto-regular-400",
     textDecorationLine: "underline",
-    marginRight:5,
-    fontSize:16,
-    lineHeight:18.75,
+    marginRight: 5,
+    fontSize: 16,
+    lineHeight: 18.75,
   },
 });
 

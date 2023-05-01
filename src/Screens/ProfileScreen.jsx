@@ -10,6 +10,7 @@ import {
   FlatList,
   Image,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { SimpleLineIcons, Feather } from "@expo/vector-icons";
 
 const windowHeight = Dimensions.get("window").height;
@@ -50,6 +51,7 @@ const userPosts = [
 ];
 
 const ProfileScreen = () => {
+  const navigation = useNavigation();
   const { email, nickname, photo } = user;
   const renderItem = ({ item }) => {
     return (
@@ -60,11 +62,11 @@ const ProfileScreen = () => {
           <View style={styles.postInfo}>
             <View style={styles.postInfo}>
               <View style={styles.postComments}>
-                <Text style={styles.postCommentsCount}>{item.comments}</Text>
+                <Text style={styles.postCommentsCount} onPress={() => navigation.navigate("Comments")}>{item.comments}</Text>
                 <TouchableOpacity activeOpacity={0.8}>
                   <Feather
                     name="message-circle"
-                    size={24}
+                    size={18}
                     color="#FF6C00"
                     fill="#FFFFFF"
                     style={{
@@ -77,14 +79,14 @@ const ProfileScreen = () => {
               <View style={styles.postLikes}>
                 <Text style={styles.postLikesCount}>{item.likes}</Text>
                 <TouchableOpacity activeOpacity={0.8}>
-                  <Feather name="thumbs-up" size={24} color="#FF6C00" />
+                  <Feather name="thumbs-up" size={18} color="#FF6C00" />
                 </TouchableOpacity>
               </View>
             </View>
             <View style={styles.postLocation}>
               <Text style={styles.postLocationText}>{item.location}</Text>
               <TouchableOpacity activeOpacity={0.8}>
-                <Feather name="map-pin" size={24} color="#FF6C00" />
+                <Feather name="map-pin" size={18} color="#FF6C00" />
               </TouchableOpacity>
             </View>
           </View>
@@ -118,14 +120,16 @@ const ProfileScreen = () => {
             </View>
           </View>
         </View>
-        <ScrollView>
-          <FlatList
-            data={userPosts}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id}
-            style={styles.postList}
-            contentContainerStyle={styles.postListContent}
-          />
+        <ScrollView nestedScrollEnabled={true}>
+          <View>
+            <FlatList
+              data={userPosts}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.id}
+              style={styles.postList}
+              contentContainerStyle={styles.postListContent}
+            />
+          </View>
         </ScrollView>
       </ImageBackground>
     </View>
@@ -146,9 +150,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     marginTop: 150,
-  },
-  header: {
-    alignItems: "center",
   },
   header: {
     alignItems: "center",

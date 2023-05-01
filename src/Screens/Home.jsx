@@ -5,12 +5,11 @@ import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import RegistrationScreen from "./auth/RegistrationScreen";
-import LoginScreen from "./auth/LoginScreen";
 import CreatePostsScreen from "./CreatePostsScreen";
 import MapScreen from "./MapScreen";
 import ProfileScreen from "./ProfileScreen";
 import PostsScreen from "./PostsScreen";
+import CommentsScreen from "./CommentsScreen";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 const Tab = createBottomTabNavigator();
@@ -20,10 +19,6 @@ import NavPostsIcon from "../components/icons/NavPostsIcon";
 import NavAddIcon from "../components/icons/NavAddIcon";
 
 const Home = () => {
-  // const {
-  //   params: { login, email },
-  // } = useRoute();
-
   return (
     <>
       <Tab.Navigator
@@ -48,6 +43,7 @@ const Home = () => {
           name="Create"
           component={CreatePostsScreen}
           options={{
+            tabBarStyle: { display: "none" },
             headerShown: false,
             tabBarIcon: ({ focused }) => (
               <NavAddIcon name="plus" size={24} focused={focused} />
@@ -63,6 +59,15 @@ const Home = () => {
               <NavProfileIcon name="user" size={24} focused={focused} />
             ),
           }}
+        />
+        <Tab.Screen
+          name="Comments"
+          component={CommentsScreen}
+          options={({ navigation }) => ({
+            headerShown: false,
+            tabBarButton: () => null,
+            tabBarStyle: { display: "none" },
+          })}
         />
       </Tab.Navigator>
     </>
