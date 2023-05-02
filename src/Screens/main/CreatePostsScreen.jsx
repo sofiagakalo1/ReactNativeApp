@@ -11,6 +11,10 @@ import {
   TextInput,
 } from "react-native";
 
+import { Camera } from "expo-camera";
+import * as Location from "expo-location";
+import * as MediaLibrary from "expo-media-library";
+
 import { useNavigation } from "@react-navigation/native";
 import {
   SimpleLineIcons,
@@ -19,20 +23,100 @@ import {
   MaterialIcons,
 } from "@expo/vector-icons";
 
-import Button from "../components/Button";
+import Button from "../../components/Button";
 
 const windowHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
 
 const CreatePostsScreen = () => {
   const navigation = useNavigation();
-  const [image, setImage] = useState(true);
+  const cameraRef = useRef();
+  const [hasPermission, setHasPermission] = useState(null);
+  const [status, requestPermission] = Camera.useCameraPermissions();
+  const [image, setImage] = useState(null);
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState(``);
+  const [coordinates, setCoordinates] = useState({});
   const [isFocused, setIsFocused] = useState({
     title: false,
     location: false,
   });
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      await MediaLibrary.requestPermissionsAsync();
+
+      setHasPermission(status === "granted");
+    })();
+  }, []);
+
+  if (hasPermission === null) {
+    return <View />;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
+
+  const takePhoto = async () => {
+    if (image) return;
+    const image = await cameraRef.current.takePictureAsync();
+    setImage(image.uri);
+    await MediaLibrary.createAssetAsync(image.uri);
+  };
+  const getLocation = async () => {
+    const location = await Location.getCurrentPositionAsync({});
+    const myCoordinates = {
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+    };
+
+    const locationName = await Location.reverseGeocodeAsync(myCoordinates);
+    const region = locationName?.[0]?.region ?? "";
+    const country = locationName?.[0]?.country ?? "";
+
+    setLocation(`${region}, ${country}`);
+    setCoordinates(myCoordinates);
+  };
+
+  const addPhoto = () => {
+    takePhoto();
+    getLocation();
+  };
+
+  const editPhoto = () => {
+    setImage(null);
+  };
+
+  const handleSubmit = () => {
+    if (!image || !title) {
+      return;
+    }
+    console.log(coordinates);
+    console.log(location);
+    console.log("submit");
+
+    const newPost = {
+      id: `${Date.now()}`,
+      image,
+      title,
+      comments: [],
+      likesCount: 0,
+      location,
+      coordinates,
+    };
+
+    console.log(newPost);
+    handleClear();
+    navigation.navigate("Posts", newPost);
+  };
+
+  const handleClear = () => {
+    setImage(null);
+    setTitle("");
+    setLocation(``);
+    setCoordinates({});
+  };
 
   return (
     <View style={styles.container}>
@@ -53,19 +137,41 @@ const CreatePostsScreen = () => {
       </View>
       <View style={styles.creenContainer}>
         {!image ? (
-          <View style={{ ...styles.imageWrapper, backgroundColor: "#E8E8E8" }}>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              style={styles.cameraIconWrapper}
+          <Camera ref={cameraRef} style={styles.camera}>
+            <View
+              style={{ ...styles.imageWrapper, backgroundColor: "#E8E8E8" }}
             >
-              <MaterialIcons
-                style={styles.cameraIcon}
-                name="camera-alt"
-                size={24}
-                color={"#BDBDBD"}
-              />
-            </TouchableOpacity>
-          </View>
+              <TouchableOpacity
+                style={styles.flipContainer}
+                onPress={() => {
+                  setType(
+                    type === Camera.Constants.Type.back
+                      ? Camera.Constants.Type.front
+                      : Camera.Constants.Type.back
+                  );
+                }}
+              >
+                <Text
+                  style={{ fontSize: 18, marginBottom: 10, color: "white" }}
+                >
+                  {" "}
+                  Flip{" "}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => addPhoto()}
+                activeOpacity={0.8}
+                style={styles.cameraIconWrapper}
+              >
+                <MaterialIcons
+                  style={styles.cameraIcon}
+                  name="camera-alt"
+                  size={24}
+                  color={"#BDBDBD"}
+                />
+              </TouchableOpacity>
+            </View>
+          </Camera>
         ) : (
           <View style={styles.imageWrapper}>
             <TouchableOpacity
@@ -80,12 +186,18 @@ const CreatePostsScreen = () => {
               />
             </TouchableOpacity>
             <Image
-              source={require("../images/my-post-1.jpeg")}
+              // source={require("../../images/my-post-1.jpeg")}
+              source={{ uri: image }}
               style={styles.image}
             />
           </View>
         )}
-        <Text style={styles.text}>
+        <Text
+          style={styles.text}
+          onPress={() => {
+            editPhoto();
+          }}
+        >
           {image ? "Редактировать фото" : "Загрузите фото"}
         </Text>
         <View style={styles.inputWrapper}>
@@ -117,6 +229,7 @@ const CreatePostsScreen = () => {
 
         <TouchableOpacity
           activeOpacity={!image ? 1 : 0.8}
+          onPress={handleSubmit}
         >
           <Button
             styleForButton={[
@@ -132,7 +245,7 @@ const CreatePostsScreen = () => {
         </TouchableOpacity>
 
         <View style={styles.deleteBtnWrapper}>
-          <TouchableOpacity style={styles.deleteBtn}>
+          <TouchableOpacity style={styles.deleteBtn} onPress={handleClear}>
             <Feather name="trash-2" size={24} color="#BDBDBD" />
           </TouchableOpacity>
         </View>
@@ -148,11 +261,9 @@ const styles = StyleSheet.create({
   },
   creenContainer: {
     paddingHorizontal: 16,
+    marginTop: 32,
   },
   header: {
-    // position: "absolute",
-    // top: 0,
-    // left: 0,
     width: screenWidth,
     height: 88,
     backgroundColor: "#FFFFFF",
@@ -178,8 +289,19 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
   },
+  camera: {
+    // marginTop: 32,
+    width: "100%",
+    height: 230,
+    borderWidth: 1,
+    borderStyle: "solid",
+    borderColor: "#BDBDBD",
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   imageWrapper: {
-    marginTop: 32,
+    // marginTop: 32,
     width: "100%",
     height: 230,
     borderWidth: 1,
@@ -248,11 +370,11 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     fontFamily: "Roboto-regular-400",
   },
-  disabledPublishBtn:{
-    backgroundColor: '#F6F6F6',
+  disabledPublishBtn: {
+    backgroundColor: "#F6F6F6",
   },
-  disabledPublishBtnText:{
-    color: '#BDBDBD',
+  disabledPublishBtnText: {
+    color: "#BDBDBD",
   },
   deleteBtnWrapper: {
     marginTop: 120,

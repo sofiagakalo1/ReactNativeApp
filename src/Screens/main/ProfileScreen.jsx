@@ -20,13 +20,13 @@ const user = {
   id: "00034242",
   email: "email@example.com",
   nickname: "Natali Romanova",
-  photo: require("../images/user-2.jpeg"),
+  photo: require("../../images/user-2.jpeg"),
 };
 
 const userPosts = [
   {
     id: "1",
-    photo: require("../images/my-post-1.jpeg"),
+    photo: require("../../images/my-post-1.jpeg"),
     title: "Лес",
     location: "Ukraine",
     comments: "32",
@@ -34,7 +34,7 @@ const userPosts = [
   },
   {
     id: "2",
-    photo: require("../images/my-post-2.jpeg"),
+    photo: require("../../images/my-post-2.jpeg"),
     title: "Закат на Черном море",
     location: "Ukraine",
     comments: "88",
@@ -42,7 +42,7 @@ const userPosts = [
   },
   {
     id: "3",
-    photo: require("../images/my-post-3.jpeg"),
+    photo: require("../../images/my-post-3.jpeg"),
     title: "Старый домик в Венеции",
     location: "Italy",
     comments: "98",
@@ -89,8 +89,16 @@ const ProfileScreen = () => {
               </View>
             </View>
             <View style={styles.postLocation}>
-              <Text style={styles.postLocationText}>{item.location}</Text>
-              <TouchableOpacity activeOpacity={0.8}>
+              <Text
+                style={styles.postLocationText}
+                onPress={() => navigation.navigate("Map")}
+              >
+                {item.location}
+              </Text>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => navigation.navigate("Map")}
+              >
                 <Feather name="map-pin" size={18} color="#FF6C00" />
               </TouchableOpacity>
             </View>
@@ -102,7 +110,7 @@ const ProfileScreen = () => {
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={require("../images/registrationbg.jpg")}
+        source={require("../../images/registrationbg.jpg")}
         style={styles.image}
       >
         <View>

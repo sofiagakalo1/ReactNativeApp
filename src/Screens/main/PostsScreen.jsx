@@ -19,13 +19,13 @@ const user = {
   id: "00034242",
   email: "email@example.com",
   nickname: "Natali Romanova",
-  photo: require("../images/User.jpg"),
+  photo: require("../../images/User.jpg"),
 };
 
 const userPosts = [
   {
     id: "1",
-    photo: require("../images/my-post-1.jpeg"),
+    photo: require("../../images/my-post-1.jpeg"),
     title: "Лес",
     location: "Ivano-Frankivs'k Region, Ukraine",
     comments: "32",
@@ -33,7 +33,7 @@ const userPosts = [
   },
   {
     id: "2",
-    photo: require("../images/my-post-2.jpeg"),
+    photo: require("../../images/my-post-2.jpeg"),
     title: "Закат на Черном море",
     location: "Ukraine",
     comments: "88",
@@ -41,7 +41,7 @@ const userPosts = [
   },
   {
     id: "3",
-    photo: require("../images/my-post-3.jpeg"),
+    photo: require("../../images/my-post-3.jpeg"),
     title: "Старый домик в Венеции",
     location: "Italy",
     comments: "98",
@@ -49,9 +49,10 @@ const userPosts = [
   },
 ];
 
-const PostsScreen = () => {
+const PostsScreen = ({route}) => {
   const navigation = useNavigation();
   const { email, nickname, photo } = user;
+  const myPost = route.params;
   const renderItem = ({ item }) => {
     return (
       <View style={styles.postContainer}>
@@ -61,11 +62,13 @@ const PostsScreen = () => {
           <View style={styles.postInfo}>
             <View style={styles.postComments}>
               <Text
-                style={styles.postCommentsCount} onPress={() => navigation.navigate("Comments")}
+                style={styles.postCommentsCount}
+                onPress={() => navigation.navigate("Comments")}
               >
                 {item.comments}
               </Text>
               <SimpleLineIcons
+              onPress={() => navigation.navigate("Comments")}
                 style={{
                   transform: [{ rotateY: "180deg" }],
                 }}
@@ -75,8 +78,18 @@ const PostsScreen = () => {
               />
             </View>
             <View style={styles.postLocation}>
-              <Text style={styles.postLocationText}>{item.location}</Text>
-              <SimpleLineIcons name="location-pin" size={18} color="#BDBDBD" />
+              <Text
+                style={styles.postLocationText}
+                onPress={() => navigation.navigate("Map", myPost)}
+              >
+                {item.location}
+              </Text>
+              <SimpleLineIcons
+                name="location-pin"
+                size={18}
+                color="#BDBDBD"
+                onPress={() => navigation.navigate("Map", myPost)}
+              />
             </View>
           </View>
         </View>

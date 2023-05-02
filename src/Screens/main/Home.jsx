@@ -6,17 +6,17 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import CreatePostsScreen from "./CreatePostsScreen";
-import MapScreen from "./MapScreen";
+import MapScreen from "../nested/MapScreen";
 import ProfileScreen from "./ProfileScreen";
 import PostsScreen from "./PostsScreen";
-import CommentsScreen from "./CommentsScreen";
+import CommentsScreen from "../nested/CommentsScreen";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 const Tab = createBottomTabNavigator();
 
-import NavProfileIcon from "../components/icons/NavProfileIcon";
-import NavPostsIcon from "../components/icons/NavPostsIcon";
-import NavAddIcon from "../components/icons/NavAddIcon";
+import NavProfileIcon from "../../components/icons/NavProfileIcon";
+import NavPostsIcon from "../../components/icons/NavPostsIcon";
+import NavAddIcon from "../../components/icons/NavAddIcon";
 
 const Home = () => {
   return (
@@ -63,6 +63,15 @@ const Home = () => {
         <Tab.Screen
           name="Comments"
           component={CommentsScreen}
+          options={() => ({
+            headerShown: false,
+            tabBarButton: () => null,
+            tabBarStyle: { display: "none" },
+          })}
+        />
+        <Tab.Screen
+          name="Map"
+          component={MapScreen}
           options={() => ({
             headerShown: false,
             tabBarButton: () => null,

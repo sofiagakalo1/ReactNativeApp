@@ -19,7 +19,7 @@ import {
   MaterialIcons,
 } from "@expo/vector-icons";
 
-import Button from "../components/Button";
+import Button from "../../components/Button";
 
 const windowHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
@@ -114,7 +114,7 @@ const CommentsScreen = ({ route }) => {
       <View style={styles.screenContainer}>
         <View style={styles.imageWrapper}>
           <Image
-            source={require("../images/my-post-1.jpeg")}
+            source={require("../../images/my-post-1.jpeg")}
             style={styles.image}
           />
         </View>

@@ -12,7 +12,7 @@ import { Button } from "react-native";
 
 import RegistrationScreen from "./src/Screens/auth/RegistrationScreen";
 import LoginScreen from "./src/Screens/auth/LoginScreen";
-import Home from "./src/Screens/Home";
+import Home from "./src/Screens/main/Home";
 
 import routes from "./src/routes";
 

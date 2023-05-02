@@ -4,11 +4,11 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import RegistrationScreen from "../src/Screens/auth/RegistrationScreen";
 import LoginScreen from "./Screens/auth/LoginScreen";
-import Home from "./Screens/Home";
-import CreatePostsScreen from './Screens/CreatePostsScreen';
-import MapScreen from './Screens/MapScreen';
-import ProfileScreen from './Screens/ProfileScreen';
-import PostsScreen from './Screens/PostsScreen';
+import Home from "./Screens/main/Home";
+import CreatePostsScreen from './Screens/main/CreatePostsScreen';
+import MapScreen from './Screens/nested/MapScreen';
+import ProfileScreen from './Screens/main/ProfileScreen';
+import PostsScreen from './Screens/main/PostsScreen';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 const Tab = createBottomTabNavigator();
