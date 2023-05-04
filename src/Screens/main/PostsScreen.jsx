@@ -49,10 +49,11 @@ const userPosts = [
   },
 ];
 
-const PostsScreen = ({route}) => {
-  const navigation = useNavigation();
+const PostsScreen = ({ navigation, route }) => {
+  // const navigation = useNavigation();
   const { email, nickname, photo } = user;
   const myPost = route.params;
+
   const renderItem = ({ item }) => {
     return (
       <View style={styles.postContainer}>
@@ -68,7 +69,7 @@ const PostsScreen = ({route}) => {
                 {item.comments}
               </Text>
               <SimpleLineIcons
-              onPress={() => navigation.navigate("Comments")}
+                onPress={() => navigation.navigate("Comments")}
                 style={{
                   transform: [{ rotateY: "180deg" }],
                 }}

@@ -17,7 +17,7 @@ const MainStack = createStackNavigator(); // вказує на групу нав
 
 const routes = ()=> {
     return (
-        <MainStack.Navigator initialRouteName="Login">
+        <MainStack.Navigator initialRouteName="Home">
           <MainStack.Screen
             name="Registration"
             component={RegistrationScreen}

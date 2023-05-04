@@ -28,11 +28,10 @@ import Button from "../../components/Button";
 const windowHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
 
-const CreatePostsScreen = () => {
-  const navigation = useNavigation();
-  const cameraRef = useRef();
+const CreatePostsScreen = ({ navigation }) => {
+  // const navigation = useNavigation();
+  const [cameraRef, setCameraRef] = useState(null);
   const [hasPermission, setHasPermission] = useState(null);
-  const [status, requestPermission] = Camera.useCameraPermissions();
   const [image, setImage] = useState(null);
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState(``);
@@ -51,9 +50,9 @@ const CreatePostsScreen = () => {
     })();
   }, []);
 
-  if (hasPermission === null) {
-    return <View />;
-  }
+  // if (hasPermission === null) {
+  //   return <View />;
+  // }
   if (hasPermission === false) {
     return <Text>No access to camera</Text>;
   }
@@ -108,7 +107,7 @@ const CreatePostsScreen = () => {
 
     console.log(newPost);
     handleClear();
-    navigation.navigate("Posts", newPost);
+    navigation.navigate("Posts", { newPost });
   };
 
   const handleClear = () => {
@@ -137,27 +136,10 @@ const CreatePostsScreen = () => {
       </View>
       <View style={styles.creenContainer}>
         {!image ? (
-          <Camera ref={cameraRef} style={styles.camera}>
+          <Camera ref={setCameraRef} style={styles.camera}>
             <View
-              style={{ ...styles.imageWrapper, backgroundColor: "#E8E8E8" }}
+              style={styles.imageWrapper}
             >
-              <TouchableOpacity
-                style={styles.flipContainer}
-                onPress={() => {
-                  setType(
-                    type === Camera.Constants.Type.back
-                      ? Camera.Constants.Type.front
-                      : Camera.Constants.Type.back
-                  );
-                }}
-              >
-                <Text
-                  style={{ fontSize: 18, marginBottom: 10, color: "white" }}
-                >
-                  {" "}
-                  Flip{" "}
-                </Text>
-              </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => addPhoto()}
                 activeOpacity={0.8}
@@ -227,10 +209,7 @@ const CreatePostsScreen = () => {
           />
         </View>
 
-        <TouchableOpacity
-          activeOpacity={!image ? 1 : 0.8}
-          onPress={handleSubmit}
-        >
+        <TouchableOpacity activeOpacity={!image ? 1 : 0.8}>
           <Button
             styleForButton={[
               styles.publishBtn,
@@ -241,6 +220,7 @@ const CreatePostsScreen = () => {
               !image || !title ? styles.disabledPublishBtnText : null,
             ]}
             text={"Опубликовать"}
+            onPress={handleSubmit}
           />
         </TouchableOpacity>
 
@@ -290,18 +270,11 @@ const styles = StyleSheet.create({
     height: 24,
   },
   camera: {
-    // marginTop: 32,
     width: "100%",
     height: 230,
-    borderWidth: 1,
-    borderStyle: "solid",
-    borderColor: "#BDBDBD",
     borderRadius: 8,
-    justifyContent: "center",
-    alignItems: "center",
   },
   imageWrapper: {
-    // marginTop: 32,
     width: "100%",
     height: 230,
     borderWidth: 1,
