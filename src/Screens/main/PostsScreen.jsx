@@ -22,33 +22,6 @@ const user = {
   photo: require("../../images/User.jpg"),
 };
 
-// const userPosts = [
-//   {
-//     id: "1",
-//     photo: require("../../images/my-post-1.jpeg"),
-//     title: "Лес",
-//     location: "Ivano-Frankivs'k Region, Ukraine",
-//     comments: "32",
-//     likes: "32",
-//   },
-//   {
-//     id: "2",
-//     photo: require("../../images/my-post-2.jpeg"),
-//     title: "Закат на Черном море",
-//     location: "Ukraine",
-//     comments: "88",
-//     likes: "32",
-//   },
-//   {
-//     id: "3",
-//     photo: require("../../images/my-post-3.jpeg"),
-//     title: "Старый домик в Венеции",
-//     location: "Italy",
-//     comments: "98",
-//     likes: "32",
-//   },
-// ];
-
 const PostsScreen = ({ navigation, route }) => {
   const [posts, setPosts] = useState([]);
   // console.log("rote.params------->", route.params);
@@ -57,11 +30,11 @@ const PostsScreen = ({ navigation, route }) => {
   // console.log("myPost------->", myPost);
   // console.log("myPost------->", [myPost]);
   useEffect(() => {
-    if (myPost?.id) {
+    if (myPost) {
       setPosts((prevPosts) => [...prevPosts, myPost]);
     }
   }, [myPost]);
-  // console.log("state------->", posts);
+  console.log("state------->", posts);
   const { email, nickname, photo } = user;
 
   return (
@@ -183,7 +156,32 @@ const PostsScreen = ({ navigation, route }) => {
     contentContainerStyle={styles.postListContent}
   /> */
 }
-
+// const userPosts = [
+//   {
+//     id: "1",
+//     photo: require("../../images/my-post-1.jpeg"),
+//     title: "Лес",
+//     location: "Ivano-Frankivs'k Region, Ukraine",
+//     comments: "32",
+//     likes: "32",
+//   },
+//   {
+//     id: "2",
+//     photo: require("../../images/my-post-2.jpeg"),
+//     title: "Закат на Черном море",
+//     location: "Ukraine",
+//     comments: "88",
+//     likes: "32",
+//   },
+//   {
+//     id: "3",
+//     photo: require("../../images/my-post-3.jpeg"),
+//     title: "Старый домик в Венеции",
+//     location: "Italy",
+//     comments: "98",
+//     likes: "32",
+//   },
+// ];
 const styles = StyleSheet.create({
   container: {
     flex: 1,

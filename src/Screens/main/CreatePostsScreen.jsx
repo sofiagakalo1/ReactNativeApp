@@ -44,18 +44,18 @@ const CreatePostsScreen = ({ navigation }) => {
   const getLocationPermission = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
     console.log("Location status------>", status);
-    if (status === granted) {
-      setHasLocationPermission(true);
-    }
+    setHasLocationPermission(status === granted);
+  };
+  const getCameraPermisiion = async () => {
+    const { status } = await Camera.requestCameraPermissionsAsync();
+    console.log("Camera status------>", status);
+    await MediaLibrary.requestPermissionsAsync();
+    setCameraHasPermission(status === granted);
   };
 
   useEffect(() => {
     (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      console.log("Camera status------>", status);
-      await MediaLibrary.requestPermissionsAsync();
-        setCameraHasPermission(status === granted);
-        
+      await getCameraPermisiion();
       await getLocationPermission();
     })();
   }, []);
