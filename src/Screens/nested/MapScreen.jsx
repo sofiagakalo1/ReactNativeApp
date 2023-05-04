@@ -13,14 +13,9 @@ import { useNavigation } from "@react-navigation/native";
 const windowHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
 
-const MapScreen = ({ route }) => {
-  const navigation = useNavigation();
+const MapScreen = ({ navigation, route }) => {
   const { coordinates, title } = route.params;
 
-  // const coordinates = {
-  //   latitude: 50.450001,
-  //   longitude: 30.523333,
-  // };
   return (
     <View style={styles.container}>
       <MapView
@@ -32,7 +27,7 @@ const MapScreen = ({ route }) => {
         }}
       >
         <View style={styles.header}>
-          <Text style={styles.headerText}>Kyiv</Text>
+          <Text style={styles.headerText}>{title}</Text>
           <TouchableOpacity
             style={styles.goBackBtn}
             activeOpacity={0.8}
@@ -41,13 +36,12 @@ const MapScreen = ({ route }) => {
             <Feather
               name="arrow-left"
               size={24}
-              color="#212121"
+              color= "#212121"
               strokeWidth={1}
             />
           </TouchableOpacity>
         </View>
-
-        <Marker coordinate={coordinates} title="Kyiv" />
+        <Marker coordinate={coordinates} title={title} />
       </MapView>
     </View>
   );

@@ -15,7 +15,6 @@ import { Camera } from "expo-camera";
 import * as Location from "expo-location";
 import * as MediaLibrary from "expo-media-library";
 
-import { useNavigation } from "@react-navigation/native";
 import {
   SimpleLineIcons,
   Feather,
@@ -29,9 +28,10 @@ const windowHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
 
 const CreatePostsScreen = ({ navigation }) => {
-  // const navigation = useNavigation();
   const [cameraRef, setCameraRef] = useState(null);
-  const [hasPermission, setHasPermission] = useState(null);
+  const [hasCameraPermission, setCameraHasPermission] =
+    Camera.useCameraPermissions();
+  const [hasLocationPermission, setHasLocationPermission] = useState(null);
   const [image, setImage] = useState(null);
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState(``);
@@ -41,38 +41,56 @@ const CreatePostsScreen = ({ navigation }) => {
     location: false,
   });
 
+  const getLocationPermission = async () => {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    console.log("Location status------>", status);
+    if (status === granted) {
+      setHasLocationPermission(true);
+    }
+  };
+
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
+      console.log("Camera status------>", status);
       await MediaLibrary.requestPermissionsAsync();
-
-      setHasPermission(status === "granted");
+        setCameraHasPermission(status === granted);
+        
+      await getLocationPermission();
     })();
   }, []);
 
-  // if (hasPermission === null) {
-  //   return <View />;
-  // }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
-  }
-
   const takePhoto = async () => {
     if (image) return;
-    const image = await cameraRef.current.takePictureAsync();
-    setImage(image.uri);
-    await MediaLibrary.createAssetAsync(image.uri);
+    if (hasCameraPermission === false) {
+      return <Text>No access to camera</Text>;
+    }
+    if (cameraRef) {
+      const { uri } = await cameraRef.takePictureAsync();
+      await MediaLibrary.createAssetAsync(uri);
+      // console.log("image------->", uri);
+      setImage(uri);
+    }
   };
   const getLocation = async () => {
+    if (hasLocationPermission === false) {
+      return <Text>No access to location</Text>;
+    }
     const location = await Location.getCurrentPositionAsync({});
+
     const myCoordinates = {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
     };
 
     const locationName = await Location.reverseGeocodeAsync(myCoordinates);
+    // console.log("locationName------->", locationName);
+
     const region = locationName?.[0]?.region ?? "";
     const country = locationName?.[0]?.country ?? "";
+
+    // console.log("region------->", region);
+    // console.log("country------->", country);
 
     setLocation(`${region}, ${country}`);
     setCoordinates(myCoordinates);
@@ -91,8 +109,6 @@ const CreatePostsScreen = ({ navigation }) => {
     if (!image || !title) {
       return;
     }
-    console.log(coordinates);
-    console.log(location);
     console.log("submit");
 
     const newPost = {
@@ -105,9 +121,10 @@ const CreatePostsScreen = ({ navigation }) => {
       coordinates,
     };
 
-    console.log(newPost);
+    console.log("newPost------->", newPost);
+
     handleClear();
-    navigation.navigate("Posts", { newPost });
+    navigation.navigate("Posts", newPost);
   };
 
   const handleClear = () => {
@@ -137,9 +154,7 @@ const CreatePostsScreen = ({ navigation }) => {
       <View style={styles.creenContainer}>
         {!image ? (
           <Camera ref={setCameraRef} style={styles.camera}>
-            <View
-              style={styles.imageWrapper}
-            >
+            <View style={styles.imageWrapper}>
               <TouchableOpacity
                 onPress={() => addPhoto()}
                 activeOpacity={0.8}
@@ -234,6 +249,8 @@ const CreatePostsScreen = ({ navigation }) => {
   );
 };
 
+export default CreatePostsScreen;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -273,6 +290,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 230,
     borderRadius: 8,
+    overflow: "hidden",
   },
   imageWrapper: {
     width: "100%",
@@ -361,5 +379,3 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
-
-export default CreatePostsScreen;

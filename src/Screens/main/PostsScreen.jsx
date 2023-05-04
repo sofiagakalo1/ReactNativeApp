@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -22,87 +22,57 @@ const user = {
   photo: require("../../images/User.jpg"),
 };
 
-const userPosts = [
-  {
-    id: "1",
-    photo: require("../../images/my-post-1.jpeg"),
-    title: "Лес",
-    location: "Ivano-Frankivs'k Region, Ukraine",
-    comments: "32",
-    likes: "32",
-  },
-  {
-    id: "2",
-    photo: require("../../images/my-post-2.jpeg"),
-    title: "Закат на Черном море",
-    location: "Ukraine",
-    comments: "88",
-    likes: "32",
-  },
-  {
-    id: "3",
-    photo: require("../../images/my-post-3.jpeg"),
-    title: "Старый домик в Венеции",
-    location: "Italy",
-    comments: "98",
-    likes: "32",
-  },
-];
+// const userPosts = [
+//   {
+//     id: "1",
+//     photo: require("../../images/my-post-1.jpeg"),
+//     title: "Лес",
+//     location: "Ivano-Frankivs'k Region, Ukraine",
+//     comments: "32",
+//     likes: "32",
+//   },
+//   {
+//     id: "2",
+//     photo: require("../../images/my-post-2.jpeg"),
+//     title: "Закат на Черном море",
+//     location: "Ukraine",
+//     comments: "88",
+//     likes: "32",
+//   },
+//   {
+//     id: "3",
+//     photo: require("../../images/my-post-3.jpeg"),
+//     title: "Старый домик в Венеции",
+//     location: "Italy",
+//     comments: "98",
+//     likes: "32",
+//   },
+// ];
 
 const PostsScreen = ({ navigation, route }) => {
-  // const navigation = useNavigation();
-  const { email, nickname, photo } = user;
+  const [posts, setPosts] = useState([]);
+  // console.log("rote.params------->", route.params);
   const myPost = route.params;
-
-  const renderItem = ({ item }) => {
-    return (
-      <View style={styles.postContainer}>
-        <Image source={item.photo} style={styles.postImage} />
-        <View style={styles.postInfoContainer}>
-          <Text style={styles.postTitle}>{item.title}</Text>
-          <View style={styles.postInfo}>
-            <View style={styles.postComments}>
-              <Text
-                style={styles.postCommentsCount}
-                onPress={() => navigation.navigate("Comments")}
-              >
-                {item.comments}
-              </Text>
-              <SimpleLineIcons
-                onPress={() => navigation.navigate("Comments")}
-                style={{
-                  transform: [{ rotateY: "180deg" }],
-                }}
-                name="bubble"
-                size={18}
-                color="#BDBDBD"
-              />
-            </View>
-            <View style={styles.postLocation}>
-              <Text
-                style={styles.postLocationText}
-                onPress={() => navigation.navigate("Map", myPost)}
-              >
-                {item.location}
-              </Text>
-              <SimpleLineIcons
-                name="location-pin"
-                size={18}
-                color="#BDBDBD"
-                onPress={() => navigation.navigate("Map", myPost)}
-              />
-            </View>
-          </View>
-        </View>
-      </View>
-    );
-  };
+  // console.log("Object.values(myPost)------->", Object.values(myPost));
+  // console.log("myPost------->", myPost);
+  // console.log("myPost------->", [myPost]);
+  useEffect(() => {
+    if (myPost?.id) {
+      setPosts((prevPosts) => [...prevPosts, myPost]);
+    }
+  }, [myPost]);
+  // console.log("state------->", posts);
+  const { email, nickname, photo } = user;
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Публикации</Text>
-        <TouchableOpacity style={styles.logOutBtn} activeOpacity={0.8}>
+        <TouchableOpacity
+          style={styles.logOutBtn}
+          activeOpacity={0.8}
+          onPress={() => navigation.navigate("Login")}
+        >
           <Feather name="log-out" size={24} color="#BDBDBD" />
         </TouchableOpacity>
       </View>
@@ -116,19 +86,103 @@ const PostsScreen = ({ navigation, route }) => {
         </View>
       </View>
       <ScrollView nestedScrollEnabled={true}>
-        <View>
-          <FlatList
-            data={userPosts}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id}
-            style={styles.postList}
-            contentContainerStyle={styles.postListContent}
-          />
+        <View style={styles.postListContent}>
+          {posts.length ? (
+            posts.map((post) => {
+              const { id, image, title, location = "", comments = [] } = post;
+              return (
+                <TouchableOpacity key={id} activeOpacity={1}>
+                  <View style={styles.postContainer}>
+                    <Image
+                      source={{ uri: `${image}` }}
+                      style={styles.postImage}
+                    />
+                    <View style={styles.postInfoContainer}>
+                      <Text style={styles.postTitle}>{title}</Text>
+                      <View style={styles.postInfo}>
+                        <View style={styles.postComments}>
+                          <Text style={styles.postCommentsCount}>
+                            {comments.length}
+                          </Text>
+                          <SimpleLineIcons
+                            style={{
+                              transform: [{ rotateY: "180deg" }],
+                            }}
+                            name="bubble"
+                            size={18}
+                            color="#BDBDBD"
+                            onPress={() =>
+                              navigation.navigate("Comments", post)
+                            }
+                          />
+                        </View>
+                        <View style={styles.postLocation}>
+                          <Text style={styles.postLocationText}>
+                            {location}
+                          </Text>
+                          <SimpleLineIcons
+                            name="location-pin"
+                            size={18}
+                            color="#BDBDBD"
+                            onPress={() => navigation.navigate("Map", post)}
+                          />
+                        </View>
+                      </View>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              );
+            })
+          ) : (
+            <Text>no posts</Text>
+          )}
         </View>
       </ScrollView>
     </View>
   );
 };
+// const renderItem = ({ item }) => {
+//   return (
+//     <View style={styles.postContainer}>
+//       <Image source={item.photo} style={styles.postImage} />
+//       <View style={styles.postInfoContainer}>
+//         <Text style={styles.postTitle}>{item.title}</Text>
+//         <View style={styles.postInfo}>
+//           <View style={styles.postComments}>
+//             <Text style={styles.postCommentsCount}>{item.comments}</Text>
+//             <SimpleLineIcons
+//               onPress={() => navigation.navigate("Comments", item)}
+//               style={{
+//                 transform: [{ rotateY: "180deg" }],
+//               }}
+//               name="bubble"
+//               size={18}
+//               color="#BDBDBD"
+//             />
+//           </View>
+//           <View style={styles.postLocation}>
+//             <Text style={styles.postLocationText}>{item.location}</Text>
+//             <SimpleLineIcons
+//               name="location-pin"
+//               size={18}
+//               color="#BDBDBD"
+//               onPress={() => navigation.navigate("Map", item)}
+//             />
+//           </View>
+//         </View>
+//       </View>
+//     </View>
+//   );
+// };
+{
+  /* <FlatList
+    data={Object.values(myPost)}
+    renderItem={renderItem}
+    keyExtractor={(item) => item.id}
+    style={styles.postList}
+    contentContainerStyle={styles.postListContent}
+  /> */
+}
 
 const styles = StyleSheet.create({
   container: {
