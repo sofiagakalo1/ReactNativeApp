@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -23,40 +23,49 @@ const user = {
   photo: require("../../images/user-2.jpeg"),
 };
 
-const userPosts = [
-  {
-    id: "1",
-    photo: require("../../images/my-post-1.jpeg"),
-    title: "Лес",
-    location: "Ukraine",
-    comments: "32",
-    likes: "50",
-  },
-  {
-    id: "2",
-    photo: require("../../images/my-post-2.jpeg"),
-    title: "Закат на Черном море",
-    location: "Ukraine",
-    comments: "88",
-    likes: "32",
-  },
-  {
-    id: "3",
-    photo: require("../../images/my-post-3.jpeg"),
-    title: "Старый домик в Венеции",
-    location: "Italy",
-    comments: "98",
-    likes: "32",
-  },
-];
+// const userPosts = [
+//   {
+//     id: "1",
+//     photo: require("../../images/my-post-1.jpeg"),
+//     title: "Лес",
+//     location: "Ukraine",
+//     comments: "32",
+//     likes: "50",
+//   },
+//   {
+//     id: "2",
+//     photo: require("../../images/my-post-2.jpeg"),
+//     title: "Закат на Черном море",
+//     location: "Ukraine",
+//     comments: "88",
+//     likes: "32",
+//   },
+//   {
+//     id: "3",
+//     photo: require("../../images/my-post-3.jpeg"),
+//     title: "Старый домик в Венеции",
+//     location: "Italy",
+//     comments: "98",
+//     likes: "32",
+//   },
+// ];
 
-const ProfileScreen = () => {
-  const navigation = useNavigation();
+const ProfileScreen = ({ navigation, route }) => {
+  const [posts, setPosts] = useState([]);
+  const myPost = route.params;
   const { email, nickname, photo } = user;
+
+  useEffect(() => {
+    if (myPost) {
+      setPosts((prevPosts) => [...prevPosts, myPost]);
+    }
+  }, [myPost]);
+  console.log("state------->", posts);
+
   const renderItem = ({ item }) => {
     return (
       <View style={styles.postContainer}>
-        <Image source={item.photo} style={styles.postImage} />
+        <Image source={{ uri: `${item.image}` }} style={styles.postImage} />
         <View style={styles.postInfoContainer}>
           <Text style={styles.postTitle}>{item.title}</Text>
           <View style={styles.postInfo}>
@@ -133,10 +142,11 @@ const ProfileScreen = () => {
             </View>
           </View>
         </View>
+
         <ScrollView nestedScrollEnabled={true}>
           <View>
             <FlatList
-              data={userPosts}
+              data={posts}
               renderItem={renderItem}
               keyExtractor={(item) => item.id}
               style={styles.postList}
@@ -155,6 +165,7 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
+
     resizeMode: "cover",
     justifyContent: "flex-end",
   },
@@ -209,7 +220,6 @@ const styles = StyleSheet.create({
   postListContent: {
     backgroundColor: "#ffffff",
     width: screenWidth,
-    marginBottom: 32,
     alignItems: "center",
   },
   postContainer: {

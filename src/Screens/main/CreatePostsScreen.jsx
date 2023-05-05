@@ -124,7 +124,7 @@ const CreatePostsScreen = ({ navigation }) => {
     console.log("newPost------->", newPost);
 
     handleClear();
-    navigation.navigate("Posts", newPost);
+    navigation.navigate("Profile", newPost);
   };
 
   const handleClear = () => {
