@@ -9,53 +9,56 @@ import {
   Dimensions,
   FlatList,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useSelector, useDispatch } from "react-redux";
+import { selectUser, selectUID } from "../../redux/authSelectors";
+import {logOutUser} from "../../redux/authOperations";
+
 import { SimpleLineIcons, Feather } from "@expo/vector-icons";
 
 const windowHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
 
-const user = {
-  id: "00034242",
-  email: "email@example.com",
-  nickname: "Natali Romanova",
-  photo: require("../../images/User.jpg"),
-};
+// const user = {
+//   id: "00034242",
+//   email: "email@example.com",
+//   nickname: "Natali Romanova",
+//   photo: require("../../images/User.jpg"),
+// };
 
 const PostsScreen = ({ navigation, route }) => {
+  const dispatch = useDispatch();
   const [posts, setPosts] = useState([]);
   // console.log("rote.params------->", route.params);
   const myPost = route.params;
-  // console.log("Object.values(myPost)------->", Object.values(myPost));
-  // console.log("myPost------->", myPost);
-  // console.log("myPost------->", [myPost]);
+  const user = useSelector(selectUser);
+  const uid = useSelector(selectUID);
+
   useEffect(() => {
     if (myPost) {
       setPosts((prevPosts) => [...prevPosts, myPost]);
     }
   }, [myPost]);
   console.log("state------->", posts);
-  const { email, nickname, photo } = user;
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Публикации</Text>
+        <Text style={styles.headerText}>Publications</Text>
         <TouchableOpacity
           style={styles.logOutBtn}
           activeOpacity={0.8}
-          onPress={() => navigation.navigate("Login")}
+          onPress={() => dispatch(logOutUser())}
         >
           <Feather name="log-out" size={24} color="#BDBDBD" />
         </TouchableOpacity>
       </View>
       <View style={styles.userContainer}>
         <View>
-          <Image source={photo} style={styles.userPhoto} />
+          <Image source={require("../../images/User.jpg")} style={styles.userPhoto} />
         </View>
         <View style={styles.userInfoContainer}>
-          <Text style={styles.loginName}>{nickname}</Text>
-          <Text style={styles.loginEmail}>{email}</Text>
+          <Text style={styles.loginName}>{user.name}</Text>
+          <Text style={styles.loginEmail}>{user.email}</Text>
         </View>
       </View>
       <ScrollView nestedScrollEnabled={true}>

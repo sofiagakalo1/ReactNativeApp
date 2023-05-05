@@ -9,9 +9,9 @@ import {
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
 } from "react-native";
+import { useDispatch } from "react-redux";
 
-import { useNavigation } from '@react-navigation/native';
-
+import { logInUser } from "../../redux/authOperations";
 import Button from "../../components/Button";
 
 const initialState = {
@@ -19,7 +19,8 @@ const initialState = {
   password: "",
 };
 
-const RegistrationScreen = () => {
+const RegistrationScreen = ({navigation}) => {
+  const dispatch = useDispatch();
   const [state, setState] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -27,15 +28,15 @@ const RegistrationScreen = () => {
     email: false,
     password: false,
   });
-  const navigation = useNavigation();
 
 
   const handleSubmit = () => {
     Keyboard.dismiss();
     setIsShowKeyboard(false);
     console.log(state);
+    dispatch(logInUser(state))
+    // navigation.navigate("Home");
     setState(initialState);
-    navigation.navigate("Home");
   };
 
   const hideKeyboard = () => {

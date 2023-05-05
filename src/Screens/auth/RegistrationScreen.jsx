@@ -10,36 +10,36 @@ import {
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
 } from "react-native";
+import { useDispatch } from "react-redux";
 
-import { useNavigation } from "@react-navigation/native";
+import { registerUser } from "../../redux/authOperations";
 
 import Button from "../../components/Button";
 import AddAvatarPhotoButtonIcon from "../../components/icons/AddAvatarPhotoButtonIcon";
 
 const initialState = {
-  login: "",
+  name: "",
   email: "",
   password: "",
 };
 
-const RegistrationScreen = () => {
-  // console.log(Platform.OS);
+const RegistrationScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
   const [state, setState] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isFocused, setIsFocused] = useState({
-    login: false,
+    name: false,
     email: false,
     password: false,
   });
 
-  const navigation = useNavigation();
-
   const handleSubmit = () => {
     Keyboard.dismiss();
     setIsShowKeyboard(false);
-    console.log(state);
-    navigation.navigate("Home");
+    // console.log(state);
+    dispatch(registerUser(state));
+    // navigation.navigate("Home");
     setState(initialState);
   };
 
@@ -81,22 +81,22 @@ const RegistrationScreen = () => {
                     <AddAvatarPhotoButtonIcon />
                   </TouchableOpacity>
                 </View>
-                <Text style={styles.headerText}>Регистрация</Text>
+                <Text style={styles.headerText}>Registration</Text>
               </View>
               <View>
                 <TextInput
                   style={
-                    isFocused.login
+                    isFocused.name
                       ? [styles.input, styles.inputFocused]
                       : styles.input
                   }
-                  placeholder="Логин"
+                  placeholder="Name"
                   placeholderTextColor="#BDBDBD"
-                  value={state.login}
+                  value={state.name}
                   onFocus={() => handleInputFocus("login")}
                   onBlur={() => handleInputBlur("login")}
                   onChangeText={(value) => {
-                    setState((prevState) => ({ ...prevState, login: value }));
+                    setState((prevState) => ({ ...prevState, name: value }));
                   }}
                 />
               </View>
@@ -107,7 +107,7 @@ const RegistrationScreen = () => {
                       ? [styles.input, styles.inputFocused]
                       : styles.input
                   }
-                  placeholder="Адрес электронной почты"
+                  placeholder="Email"
                   placeholderTextColor="#BDBDBD"
                   value={state.email}
                   onFocus={() => handleInputFocus("email")}
@@ -124,7 +124,7 @@ const RegistrationScreen = () => {
                       ? [styles.input, styles.inputFocused]
                       : styles.input
                   }
-                  placeholder="Пароль"
+                  placeholder="Password"
                   placeholderTextColor="#BDBDBD"
                   value={state.password}
                   onFocus={() => handleInputFocus("password")}
@@ -138,7 +138,7 @@ const RegistrationScreen = () => {
                   style={styles.showPasswordButton}
                   styleForButton={styles.showPasswordBtn}
                   styleForText={styles.showPasswordBtnText}
-                  text={isShowPassword ? "Скрыть" : "Показать"}
+                  text={isShowPassword ? "Hide" : "Show"}
                   onPress={() => setIsShowPassword(!isShowPassword)}
                 />
               </View>
@@ -146,13 +146,13 @@ const RegistrationScreen = () => {
                 <Button
                   styleForButton={styles.registerBtn}
                   styleForText={styles.registerBtnText}
-                  text={"Зарегистрироваться"}
+                  text={"Sign up"}
                   onPress={handleSubmit}
                 />
                 <Button
                   styleForButton={styles.linkBtn}
                   styleForText={styles.linkBtnText}
-                  text={"Уже есть аккаунт? Войти"}
+                  text={"Already have an account? Sign in!"}
                   onPress={() => navigation.navigate("Login")}
                 />
               </View>

@@ -10,50 +10,27 @@ import {
   FlatList,
   Image,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useSelector, useDispatch } from "react-redux";
+import { selectUser, selectUID } from "../../redux/authSelectors";
+import {logOutUser} from "../../redux/authOperations";
 import { SimpleLineIcons, Feather } from "@expo/vector-icons";
 
 const windowHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
 
-const user = {
-  id: "00034242",
-  email: "email@example.com",
-  nickname: "Natali Romanova",
-  photo: require("../../images/user-2.jpeg"),
-};
-
-// const userPosts = [
-//   {
-//     id: "1",
-//     photo: require("../../images/my-post-1.jpeg"),
-//     title: "Лес",
-//     location: "Ukraine",
-//     comments: "32",
-//     likes: "50",
-//   },
-//   {
-//     id: "2",
-//     photo: require("../../images/my-post-2.jpeg"),
-//     title: "Закат на Черном море",
-//     location: "Ukraine",
-//     comments: "88",
-//     likes: "32",
-//   },
-//   {
-//     id: "3",
-//     photo: require("../../images/my-post-3.jpeg"),
-//     title: "Старый домик в Венеции",
-//     location: "Italy",
-//     comments: "98",
-//     likes: "32",
-//   },
-// ];
+// const user = {
+//   id: "00034242",
+//   email: "email@example.com",
+//   nickname: "Natali Romanova",
+//   photo: require("../../images/user-2.jpeg"),
+// };
 
 const ProfileScreen = ({ navigation, route }) => {
+  const dispatch = useDispatch();
   const [posts, setPosts] = useState([]);
   const myPost = route.params;
-  const { email, nickname, photo } = user;
+  const user = useSelector(selectUser);
+  const uid = useSelector(selectUID);
 
   useEffect(() => {
     if (myPost) {
@@ -126,7 +103,7 @@ const ProfileScreen = ({ navigation, route }) => {
           <View style={styles.profileBlock}>
             <View style={styles.header}>
               <View style={styles.photoBox}>
-                <Image source={photo} style={styles.userPhoto} />
+                <Image source={require("../../images/user-2.jpeg")} style={styles.userPhoto} />
                 <TouchableOpacity
                   style={styles.PhotoBtn}
                   activeOpacity={0.8}
@@ -135,10 +112,14 @@ const ProfileScreen = ({ navigation, route }) => {
                   <SimpleLineIcons name="close" size={24} color="#BDBDBD" />
                 </TouchableOpacity>
               </View>
-              <TouchableOpacity style={styles.logOutBtn} activeOpacity={0.8}>
+              <TouchableOpacity
+                style={styles.logOutBtn}
+                activeOpacity={0.8}
+                onPress={() => dispatch(logOutUser())}
+              >
                 <Feather name="log-out" size={24} color="#BDBDBD" />
               </TouchableOpacity>
-              <Text style={styles.headerText}>{nickname}</Text>
+              <Text style={styles.headerText}>{user.name}</Text>
             </View>
           </View>
         </View>
@@ -281,3 +262,30 @@ const styles = StyleSheet.create({
 });
 
 export default ProfileScreen;
+
+// const userPosts = [
+//   {
+//     id: "1",
+//     photo: require("../../images/my-post-1.jpeg"),
+//     title: "Лес",
+//     location: "Ukraine",
+//     comments: "32",
+//     likes: "50",
+//   },
+//   {
+//     id: "2",
+//     photo: require("../../images/my-post-2.jpeg"),
+//     title: "Закат на Черном море",
+//     location: "Ukraine",
+//     comments: "88",
+//     likes: "32",
+//   },
+//   {
+//     id: "3",
+//     photo: require("../../images/my-post-3.jpeg"),
+//     title: "Старый домик в Венеции",
+//     location: "Italy",
+//     comments: "98",
+//     likes: "32",
+//   },
+// ];
