@@ -9,14 +9,18 @@ import {
   Dimensions,
   FlatList,
   TextInput,
+  Keyboard,
 } from "react-native";
 
-import { useNavigation } from "@react-navigation/native";
+import uuid from "react-native-uuid";
+import { useSelector, useDispatch } from "react-redux";
+import { selectUser, selectUID } from "../../redux/authSelectors";
+import { selectPosts, selectCurrentPostId } from "../../redux/postsSelector";
+import { addComment } from "../../redux/postsOperations";
+
 import {
-  SimpleLineIcons,
   Feather,
   AntDesign,
-  MaterialIcons,
 } from "@expo/vector-icons";
 
 import Button from "../../components/Button";
@@ -24,40 +28,43 @@ import Button from "../../components/Button";
 const windowHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
 
-const commentsData = [
-  {
-    id: "1",
-    avatar: "https://placekitten.com/g/481/480",
-    author: "John Doe",
-    text: "Really love your most recent photo. I’ve been trying to capture the same thing for a few months and would love some tips!",
-    date: "09 jun, 2020 | 08:40",
-  },
-  {
-    avatar: "https://placekitten.com/g/482/480",
-    id: "2",
-    author: "Jane Smith",
-    text: "A fast 50mm like f1.8 would help with the bokeh. Ive been using primes as they tend to get a bit sharper images.",
-    date: "09 июня, 2020 | 09:14",
-  },
+const CommentsScreen = ({ route, navigation }) => {
+  const dispatch = useDispatch();
+  const { name } = useSelector(selectUser);
+  const uid = useSelector(selectUID);
+  const { posts } = useSelector(selectPosts);
+  const currentPostId = useSelector(selectCurrentPostId);
+  const currentPost = posts.find((post) => post.id === currentPostId);
 
-  {
-    id: "3",
-    avatar: "https://placekitten.com/g/481/480",
-    author: "John Doe",
-    text: "Thank you! That was very helpful!",
-    date: "09 jun, 2020 | 09:20",
-  },
-];
-
-const CommentsScreen = ({ route }) => {
-  const navigation = useNavigation();
   const [commentText, setCommentText] = useState("");
 
+  const publishComment = () => {
+    if (!commentText) {
+      alert("Write something ^_^");
+      return;
+    }
+
+    const newComment = {
+      id: uuid.v4(8),
+      author: name,
+      addedOn: Date.now(),
+      commentText,
+    };
+
+    Keyboard.dismiss();
+    dispatch(addComment({ uid, currentPostId, comment: newComment }));
+    setCommentText("");
+  };
+
+  if (!currentPost) return;
+
+  const areComments = Boolean(currentPost.comments.length);
+
   const renderItem = ({ item }) => {
-    const currentUser = "Jane Smith";
+    const currentUser = name;
 
     const isCurrentUser = () => {
-      if (currentUser === item.author) {
+      if (currentUser === item.name) {
         return true;
       }
       return false;
@@ -81,7 +88,7 @@ const CommentsScreen = ({ route }) => {
         </View>
         <View style={styles.commentTextContainer}>
           <Text style={styles.commentAuthor}>{item.author}</Text>
-          <Text style={styles.commentText}>{item.text}</Text>
+          <Text style={styles.commentText}>{item.commentText}</Text>
           <Text
             style={
               isCurrentUser() ? styles.commentCurrentDate : styles.commentDate
@@ -114,32 +121,37 @@ const CommentsScreen = ({ route }) => {
       <View style={styles.screenContainer}>
         <View style={styles.imageWrapper}>
           <Image
-            source={require("../../images/my-post-1.jpeg")}
+            source={{ uri: `${currentPost.image}` }}
             style={styles.image}
           />
         </View>
 
         <View style={styles.commentsWrapper}>
-          <ScrollView>
-            <View>
-              <FlatList
-                data={commentsData}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-                style={styles.commentsList}
-                contentContainerStyle={styles.commentsListContent}
-              />
-            </View>
-          </ScrollView>
+          {areComments ? (
+            <ScrollView>
+              <View>
+                <FlatList
+                  data={currentPost.comments}
+                  renderItem={renderItem}
+                  keyExtractor={(item) => item.id}
+                  style={styles.commentsList}
+                  contentContainerStyle={styles.commentsListContent}
+                />
+              </View>
+            </ScrollView>
+          ) : (
+            <Text style={{ alignSelf: "center" }}>No comments</Text>
+          )}
         </View>
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
             placeholder="Write a comment..."
+            onChangeText={(value) => setCommentText(value)}
+            placeholderTextColor="#BDBDBD"
             value={commentText}
-            onChangeText={(text) => setCommentText(text)}
           />
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={publishComment}>
             <AntDesign name="arrowup" size={14} color="#fff" />
           </TouchableOpacity>
         </View>
@@ -203,7 +215,9 @@ const styles = StyleSheet.create({
   },
   commentsWrapper: {},
   //   commentsList: {},
-  //   commentsListContent: {},
+  commentsListContent: {
+    height: 450,
+  },
   commentContainer: {
     flexDirection: "row-reverse",
     alignItems: "flex-start",

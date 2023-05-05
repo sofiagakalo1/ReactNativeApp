@@ -18,7 +18,7 @@ import Home from "./Screens/main/Home";
 const MainStack = createStackNavigator(); // вказує на групу навігаторів
 
 const routes = (isAuthUser) => {
-  console.log("isAuthUser------->", isAuthUser)
+  console.log("isAuthUser------->", isAuthUser);
   // const dispatch = useDispatch();
   // const stateChange = useSelector(selectStateChanged);
   // const routing = useRoute(stateChange);
@@ -30,15 +30,15 @@ const routes = (isAuthUser) => {
     return (
       <MainStack.Navigator initialRouteName="Login">
         <MainStack.Screen
-          name="Registration"
-          component={RegistrationScreen}
+          name="Login"
+          component={LoginScreen}
           options={{
             headerShown: false,
           }}
         />
         <MainStack.Screen
-          name="Login"
-          component={LoginScreen}
+          name="Registration"
+          component={RegistrationScreen}
           options={{
             headerShown: false,
           }}

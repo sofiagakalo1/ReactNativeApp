@@ -14,6 +14,7 @@ import { selectUser, selectUID } from "../../redux/authSelectors";
 import { logOutUser } from "../../redux/authOperations";
 import { selectPosts } from "../../redux/postsSelector";
 import { fetchAllPosts } from "../../redux/postsOperations";
+import { setCurrentPostId } from "../../redux/postsSlice";
 
 import { SimpleLineIcons, Feather } from "@expo/vector-icons";
 
@@ -31,11 +32,13 @@ const PostsScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
   // const [posts, setPosts] = useState([]);
   // console.log("rote.params------->", route.params);
-  const myPost = route.params;
+  // const myPost = route.params;
   const user = useSelector(selectUser);
   const uid = useSelector(selectUID);
   const { posts } = useSelector(selectPosts);
 
+  useEffect(()=>{},[]);
+  
   useEffect(() => {
     dispatch(fetchAllPosts(uid));
   }, [uid]);
@@ -98,9 +101,11 @@ const PostsScreen = ({ navigation, route }) => {
                             name="bubble"
                             size={18}
                             color="#BDBDBD"
-                            onPress={() =>
-                              navigation.navigate("Comments", post)
-                            }
+                            onPress={() => {
+                              dispatch(setCurrentPostId(post.id));
+                              console.log("post_id------->", post.id);
+                              navigation.navigate("Comments");
+                            }}
                           />
                         </View>
                         <View style={styles.postLocation}>
@@ -112,19 +117,18 @@ const PostsScreen = ({ navigation, route }) => {
                             size={18}
                             color="#BDBDBD"
                             onPress={() => {
-                              console.log(
-                                "SEND-post.location.coordinates----->",
-                                post.location.coordinates
-                              );
-                              console.log(
-                                "SEND-post.location.region----->",
-                                post.location.region
-                              );
-                              navigation.navigate(
-                                "Map", {
-                                  coordinates: post.location.coordinates,
-                                  region: post.location.region,
-                                });
+                              // console.log(
+                              //   "SEND-post.location.coordinates----->",
+                              //   post.location.coordinates
+                              // );
+                              // console.log(
+                              //   "SEND-post.location.region----->",
+                              //   post.location.region
+                              // );
+                              navigation.navigate("Map", {
+                                coordinates: post.location.coordinates,
+                                region: post.location.region,
+                              });
                             }}
                           />
                         </View>
