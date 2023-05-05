@@ -14,20 +14,24 @@ const windowHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
 
 const MapScreen = ({ navigation, route }) => {
-  const { coordinates, title } = route.params;
-
+  const {
+    coordinates: { latitude, longitude },
+    region,
+  } = route.params;
+  console.log("GET-MAP-route.params------>", route.params);
   return (
     <View style={styles.container}>
       <MapView
         style={{ flex: 1 }}
         initialRegion={{
-          ...coordinates,
+          latitude,
+          longitude,
           latitudeDelta: 0.001,
           longitudeDelta: 0.006,
         }}
       >
         <View style={styles.header}>
-          <Text style={styles.headerText}>{title}</Text>
+          <Text style={styles.headerText}>{region}</Text>
           <TouchableOpacity
             style={styles.goBackBtn}
             activeOpacity={0.8}
@@ -36,12 +40,12 @@ const MapScreen = ({ navigation, route }) => {
             <Feather
               name="arrow-left"
               size={24}
-              color= "#212121"
+              color="#212121"
               strokeWidth={1}
             />
           </TouchableOpacity>
         </View>
-        <Marker coordinate={coordinates} title={title} />
+        <Marker coordinate={{latitude, longitude}} title={region} />
       </MapView>
     </View>
   );

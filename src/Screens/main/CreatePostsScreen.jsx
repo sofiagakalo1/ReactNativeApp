@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,10 +10,13 @@ import {
   FlatList,
   TextInput,
 } from "react-native";
-
+import uuid from "react-native-uuid";
 import { Camera } from "expo-camera";
 import * as Location from "expo-location";
 import * as MediaLibrary from "expo-media-library";
+import { useDispatch, useSelector } from "react-redux";
+import { selectUID } from "../../redux/authSelectors";
+import { addPost } from "../../redux/postsOperations";
 
 import {
   SimpleLineIcons,
@@ -27,15 +30,24 @@ import Button from "../../components/Button";
 const windowHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
 
-const CreatePostsScreen = ({ navigation }) => {
+const CreatePostsScreen = ({ navigation, route }) => {
+  const dispatch = useDispatch();
+  const uid = useSelector(selectUID);
+  const [post, setPost] = useState({
+    image:null,
+    title:"",
+    comments: [],
+    likesCount: 0,
+    location: "",
+    id:null,
+  });
   const [cameraRef, setCameraRef] = useState(null);
   const [hasCameraPermission, setCameraHasPermission] =
     Camera.useCameraPermissions();
   const [hasLocationPermission, setHasLocationPermission] = useState(null);
-  const [image, setImage] = useState(null);
-  const [title, setTitle] = useState("");
-  const [location, setLocation] = useState(``);
-  const [coordinates, setCoordinates] = useState({});
+  // const [image, setImage] = useState(null);
+  // const [title, setTitle] = useState("");
+  // const [location, setLocation] = useState(``);
   const [isFocused, setIsFocused] = useState({
     title: false,
     location: false,
@@ -43,12 +55,12 @@ const CreatePostsScreen = ({ navigation }) => {
 
   const getLocationPermission = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
-    console.log("Location status------>", status);
-    setHasLocationPermission(status === granted);
+    // console.log("Location status------>", status);
+    setHasLocationPermission(true);
   };
   const getCameraPermisiion = async () => {
     const { status } = await Camera.requestCameraPermissionsAsync();
-    console.log("Camera status------>", status);
+    // console.log("Camera status------>", status);
     await MediaLibrary.requestPermissionsAsync();
     setCameraHasPermission(status === granted);
   };
@@ -61,7 +73,7 @@ const CreatePostsScreen = ({ navigation }) => {
   }, []);
 
   const takePhoto = async () => {
-    if (image) return;
+    if (post.image) return;
     if (hasCameraPermission === false) {
       return <Text>No access to camera</Text>;
     }
@@ -69,7 +81,10 @@ const CreatePostsScreen = ({ navigation }) => {
       const { uri } = await cameraRef.takePictureAsync();
       await MediaLibrary.createAssetAsync(uri);
       // console.log("image------->", uri);
-      setImage(uri);
+      setPost((state) => ({
+        ...state,
+        image: uri,
+      }));
     }
   };
   const getLocation = async () => {
@@ -77,23 +92,19 @@ const CreatePostsScreen = ({ navigation }) => {
       return <Text>No access to location</Text>;
     }
     const location = await Location.getCurrentPositionAsync({});
-
-    const myCoordinates = {
+    // console.log("location------->", location);
+    const coordinates = {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
     };
+    const locationRegion = await Location.reverseGeocodeAsync(coordinates);
+    const region = locationRegion[0].region;
+    const country = locationRegion[0].country;
 
-    const locationName = await Location.reverseGeocodeAsync(myCoordinates);
-    // console.log("locationName------->", locationName);
-
-    const region = locationName?.[0]?.region ?? "";
-    const country = locationName?.[0]?.country ?? "";
-
-    // console.log("region------->", region);
-    // console.log("country------->", country);
-
-    setLocation(`${region}, ${country}`);
-    setCoordinates(myCoordinates);
+    setPost((state) => ({
+      ...state,
+      location: { coordinates, region, country },
+    }));
   };
 
   const addPhoto = () => {
@@ -102,36 +113,38 @@ const CreatePostsScreen = ({ navigation }) => {
   };
 
   const editPhoto = () => {
-    setImage(null);
+    setPost((state) => ({ ...state, image: "", title: "", location: null }));
+  };
+
+  const onInputChange = (value) => {
+    // console.log("inputValue------>", value)
+    setPost((state) => ({ ...state, ...value }));
   };
 
   const handleSubmit = () => {
-    if (!image || !title) {
+    if (!post.image || !post.title) {
       return;
     }
-    console.log("submit");
-
     const newPost = {
-      id: `${Date.now()}`,
-      image,
-      title,
-      comments: [],
-      likesCount: 0,
-      location,
-      coordinates,
+      ...post,
+      id: uuid.v4(8),
     };
-
-    console.log("newPost------->", newPost);
+    console.log("newPost------->", post);
+    dispatch(addPost({ uid, newPost }));
 
     handleClear();
-    navigation.navigate("Profile", newPost);
+    navigation.navigate("Posts");
   };
 
   const handleClear = () => {
-    setImage(null);
-    setTitle("");
-    setLocation(``);
-    setCoordinates({});
+    setPost({
+      image: "",
+      title: "",
+      comments: [],
+      likesCount: 0,
+      location: null,
+      id:null,
+    });
   };
 
   return (
@@ -152,7 +165,7 @@ const CreatePostsScreen = ({ navigation }) => {
         <Text style={styles.headerText}>Создать публикацию</Text>
       </View>
       <View style={styles.creenContainer}>
-        {!image ? (
+        {!post.image ? (
           <Camera ref={setCameraRef} style={styles.camera}>
             <View style={styles.imageWrapper}>
               <TouchableOpacity
@@ -184,7 +197,7 @@ const CreatePostsScreen = ({ navigation }) => {
             </TouchableOpacity>
             <Image
               // source={require("../../images/my-post-1.jpeg")}
-              source={{ uri: image }}
+              source={{ uri: post.image }}
               style={styles.image}
             />
           </View>
@@ -195,7 +208,7 @@ const CreatePostsScreen = ({ navigation }) => {
             editPhoto();
           }}
         >
-          {image ? "Редактировать фото" : "Загрузите фото"}
+          {post.image ? "Редактировать фото" : "Загрузите фото"}
         </Text>
         <View style={styles.inputWrapper}>
           <TextInput
@@ -206,15 +219,19 @@ const CreatePostsScreen = ({ navigation }) => {
             }
             placeholder="Название..."
             placeholderTextColor={"#BDBDBD"}
-            value={title}
-            onChangeText={setTitle}
+            value={post.title}
+            onChangeText={(value) => onInputChange({ title: value })}
           />
           <TextInput
             style={[styles.input, styles.locationInput]}
             placeholder="Местность..."
             placeholderTextColor={"#BDBDBD"}
-            value={location}
-            onChangeText={setLocation}
+            editable={false}
+            value={
+              post.location
+                ? `${post.location.region}, ${post.location.country}`
+                : ""
+            }
           />
           <SimpleLineIcons
             style={styles.locationIcon}
@@ -224,15 +241,15 @@ const CreatePostsScreen = ({ navigation }) => {
           />
         </View>
 
-        <TouchableOpacity activeOpacity={!image ? 1 : 0.8}>
+        <TouchableOpacity activeOpacity={!post.image ? 1 : 0.8}>
           <Button
             styleForButton={[
               styles.publishBtn,
-              !image || !title ? styles.disabledPublishBtn : null,
+              !post.image || !post.title ? styles.disabledPublishBtn : null,
             ]}
             styleForText={[
               styles.publishBtnText,
-              !image || !title ? styles.disabledPublishBtnText : null,
+              !post.image || !post.title ? styles.disabledPublishBtnText : null,
             ]}
             text={"Опубликовать"}
             onPress={handleSubmit}

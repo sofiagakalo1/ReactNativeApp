@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { selectUser, selectUID } from "../../redux/authSelectors";
-import {logOutUser} from "../../redux/authOperations";
+import { logOutUser } from "../../redux/authOperations";
 import { SimpleLineIcons, Feather } from "@expo/vector-icons";
 
 const windowHeight = Dimensions.get("window").height;
@@ -37,7 +37,7 @@ const ProfileScreen = ({ navigation, route }) => {
       setPosts((prevPosts) => [...prevPosts, myPost]);
     }
   }, [myPost]);
-  console.log("state------->", posts);
+  // console.log("state------->", posts);
 
   const renderItem = ({ item }) => {
     return (
@@ -103,7 +103,10 @@ const ProfileScreen = ({ navigation, route }) => {
           <View style={styles.profileBlock}>
             <View style={styles.header}>
               <View style={styles.photoBox}>
-                <Image source={require("../../images/user-2.jpeg")} style={styles.userPhoto} />
+                <Image
+                  source={require("../../images/user-2.jpeg")}
+                  style={styles.userPhoto}
+                />
                 <TouchableOpacity
                   style={styles.PhotoBtn}
                   activeOpacity={0.8}

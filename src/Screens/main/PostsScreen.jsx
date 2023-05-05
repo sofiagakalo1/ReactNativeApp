@@ -11,7 +11,9 @@ import {
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { selectUser, selectUID } from "../../redux/authSelectors";
-import {logOutUser} from "../../redux/authOperations";
+import { logOutUser } from "../../redux/authOperations";
+import { selectPosts } from "../../redux/postsSelector";
+import { fetchAllPosts } from "../../redux/postsOperations";
 
 import { SimpleLineIcons, Feather } from "@expo/vector-icons";
 
@@ -27,18 +29,25 @@ const screenWidth = Dimensions.get("window").width;
 
 const PostsScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
-  const [posts, setPosts] = useState([]);
+  // const [posts, setPosts] = useState([]);
   // console.log("rote.params------->", route.params);
   const myPost = route.params;
   const user = useSelector(selectUser);
   const uid = useSelector(selectUID);
+  const { posts } = useSelector(selectPosts);
 
   useEffect(() => {
-    if (myPost) {
-      setPosts((prevPosts) => [...prevPosts, myPost]);
-    }
-  }, [myPost]);
-  console.log("state------->", posts);
+    dispatch(fetchAllPosts(uid));
+  }, [uid]);
+
+  if (!user) return;
+
+  // useEffect(() => {
+  //   if (myPost) {
+  //     setPosts((prevPosts) => [...prevPosts, myPost]);
+  //   }
+  // }, [myPost]);
+  // console.log("state------->", posts);
 
   return (
     <View style={styles.container}>
@@ -54,7 +63,10 @@ const PostsScreen = ({ navigation, route }) => {
       </View>
       <View style={styles.userContainer}>
         <View>
-          <Image source={require("../../images/User.jpg")} style={styles.userPhoto} />
+          <Image
+            source={require("../../images/User.jpg")}
+            style={styles.userPhoto}
+          />
         </View>
         <View style={styles.userInfoContainer}>
           <Text style={styles.loginName}>{user.name}</Text>
@@ -65,20 +77,19 @@ const PostsScreen = ({ navigation, route }) => {
         <View style={styles.postListContent}>
           {posts.length ? (
             posts.map((post) => {
-              const { id, image, title, location = "", comments = [] } = post;
               return (
-                <TouchableOpacity key={id} activeOpacity={1}>
+                <TouchableOpacity key={post.id} activeOpacity={1}>
                   <View style={styles.postContainer}>
                     <Image
-                      source={{ uri: `${image}` }}
+                      source={{ uri: `${post.image}` }}
                       style={styles.postImage}
                     />
                     <View style={styles.postInfoContainer}>
-                      <Text style={styles.postTitle}>{title}</Text>
+                      <Text style={styles.postTitle}>{post.title}</Text>
                       <View style={styles.postInfo}>
                         <View style={styles.postComments}>
                           <Text style={styles.postCommentsCount}>
-                            {comments.length}
+                            {post.comments.length}
                           </Text>
                           <SimpleLineIcons
                             style={{
@@ -94,13 +105,27 @@ const PostsScreen = ({ navigation, route }) => {
                         </View>
                         <View style={styles.postLocation}>
                           <Text style={styles.postLocationText}>
-                            {location}
+                            {post.location.country}
                           </Text>
                           <SimpleLineIcons
                             name="location-pin"
                             size={18}
                             color="#BDBDBD"
-                            onPress={() => navigation.navigate("Map", post)}
+                            onPress={() => {
+                              console.log(
+                                "SEND-post.location.coordinates----->",
+                                post.location.coordinates
+                              );
+                              console.log(
+                                "SEND-post.location.region----->",
+                                post.location.region
+                              );
+                              navigation.navigate(
+                                "Map", {
+                                  coordinates: post.location.coordinates,
+                                  region: post.location.region,
+                                });
+                            }}
                           />
                         </View>
                       </View>
@@ -159,32 +184,7 @@ const PostsScreen = ({ navigation, route }) => {
     contentContainerStyle={styles.postListContent}
   /> */
 }
-// const userPosts = [
-//   {
-//     id: "1",
-//     photo: require("../../images/my-post-1.jpeg"),
-//     title: "Лес",
-//     location: "Ivano-Frankivs'k Region, Ukraine",
-//     comments: "32",
-//     likes: "32",
-//   },
-//   {
-//     id: "2",
-//     photo: require("../../images/my-post-2.jpeg"),
-//     title: "Закат на Черном море",
-//     location: "Ukraine",
-//     comments: "88",
-//     likes: "32",
-//   },
-//   {
-//     id: "3",
-//     photo: require("../../images/my-post-3.jpeg"),
-//     title: "Старый домик в Венеции",
-//     location: "Italy",
-//     comments: "98",
-//     likes: "32",
-//   },
-// ];
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
