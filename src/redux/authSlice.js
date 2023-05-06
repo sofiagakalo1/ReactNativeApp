@@ -6,7 +6,7 @@ const authSlice = createSlice({
   initialState: {
     user: { name: "", email: "" },
     uid: "",
-    stateChange: false,
+    // stateChange: false,
   },
   extraReducers: (builder) => {
     builder

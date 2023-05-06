@@ -21,36 +21,19 @@ import { SimpleLineIcons, Feather } from "@expo/vector-icons";
 const windowHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
 
-// const user = {
-//   id: "00034242",
-//   email: "email@example.com",
-//   nickname: "Natali Romanova",
-//   photo: require("../../images/User.jpg"),
-// };
-
 const PostsScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
-  // const [posts, setPosts] = useState([]);
-  // console.log("rote.params------->", route.params);
-  // const myPost = route.params;
   const user = useSelector(selectUser);
   const uid = useSelector(selectUID);
   const { posts } = useSelector(selectPosts);
 
-  useEffect(()=>{},[]);
-  
+  useEffect(() => {}, []);
+
   useEffect(() => {
     dispatch(fetchAllPosts(uid));
   }, [uid]);
 
   if (!user) return;
-
-  // useEffect(() => {
-  //   if (myPost) {
-  //     setPosts((prevPosts) => [...prevPosts, myPost]);
-  //   }
-  // }, [myPost]);
-  // console.log("state------->", posts);
 
   return (
     <View style={styles.container}>
@@ -103,35 +86,30 @@ const PostsScreen = ({ navigation, route }) => {
                             color="#BDBDBD"
                             onPress={() => {
                               dispatch(setCurrentPostId(post.id));
-                              console.log("post_id------->", post.id);
                               navigation.navigate("Comments");
                             }}
                           />
                         </View>
-                        <View style={styles.postLocation}>
-                          <Text style={styles.postLocationText}>
-                            {post.location.country}
-                          </Text>
-                          <SimpleLineIcons
-                            name="location-pin"
-                            size={18}
-                            color="#BDBDBD"
-                            onPress={() => {
-                              // console.log(
-                              //   "SEND-post.location.coordinates----->",
-                              //   post.location.coordinates
-                              // );
-                              // console.log(
-                              //   "SEND-post.location.region----->",
-                              //   post.location.region
-                              // );
-                              navigation.navigate("Map", {
-                                coordinates: post.location.coordinates,
-                                region: post.location.region,
-                              });
-                            }}
-                          />
-                        </View>
+                        {post.location ? (
+                          <View style={styles.postLocation}>
+                            <Text style={styles.postLocationText}>
+                              {post.location.country}
+                            </Text>
+                            <SimpleLineIcons
+                              name="location-pin"
+                              size={18}
+                              color="#BDBDBD"
+                              onPress={() => {
+                                navigation.navigate("Map", {
+                                  coordinates: post.location.coordinates,
+                                  region: post.location.region,
+                                });
+                              }}
+                            />
+                          </View>
+                        ) : (
+                          <View></View>
+                        )}
                       </View>
                     </View>
                   </View>
@@ -192,7 +170,6 @@ const PostsScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // alignItems: "center",
     backgroundColor: "#fff",
   },
   header: {

@@ -13,86 +13,30 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { selectUser, selectUID } from "../../redux/authSelectors";
 import { logOutUser } from "../../redux/authOperations";
+import { selectPosts } from "../../redux/postsSelector";
+import { fetchAllPosts } from "../../redux/postsOperations";
+import { setCurrentPostId } from "../../redux/postsSlice";
+
 import { SimpleLineIcons, Feather } from "@expo/vector-icons";
 
 const windowHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
 
-// const user = {
-//   id: "00034242",
-//   email: "email@example.com",
-//   nickname: "Natali Romanova",
-//   photo: require("../../images/user-2.jpeg"),
-// };
-
 const ProfileScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
-  const [posts, setPosts] = useState([]);
-  const myPost = route.params;
   const user = useSelector(selectUser);
   const uid = useSelector(selectUID);
+  const { posts } = useSelector(selectPosts);
+
+  useEffect(() => {}, []);
 
   useEffect(() => {
-    if (myPost) {
-      setPosts((prevPosts) => [...prevPosts, myPost]);
-    }
-  }, [myPost]);
-  // console.log("state------->", posts);
+    dispatch(fetchAllPosts(uid));
+  }, [uid]);
 
-  const renderItem = ({ item }) => {
-    return (
-      <View style={styles.postContainer}>
-        <Image source={{ uri: `${item.image}` }} style={styles.postImage} />
-        <View style={styles.postInfoContainer}>
-          <Text style={styles.postTitle}>{item.title}</Text>
-          <View style={styles.postInfo}>
-            <View style={styles.postInfo}>
-              <View style={styles.postComments}>
-                <Text
-                  style={styles.postCommentsCount}
-                  onPress={() => navigation.navigate("Comments")}
-                >
-                  {item.comments}
-                </Text>
-                <TouchableOpacity activeOpacity={0.8}>
-                  <Feather
-                    name="message-circle"
-                    size={18}
-                    color="#FF6C00"
-                    fill="#FFFFFF"
-                    style={{
-                      transform: [{ rotate: "270deg" }],
-                      backgroundColor: "#FFFFFF",
-                    }}
-                  />
-                </TouchableOpacity>
-              </View>
-              <View style={styles.postLikes}>
-                <Text style={styles.postLikesCount}>{item.likes}</Text>
-                <TouchableOpacity activeOpacity={0.8}>
-                  <Feather name="thumbs-up" size={18} color="#FF6C00" />
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View style={styles.postLocation}>
-              <Text
-                style={styles.postLocationText}
-                onPress={() => navigation.navigate("Map")}
-              >
-                {item.location}
-              </Text>
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() => navigation.navigate("Map")}
-              >
-                <Feather name="map-pin" size={18} color="#FF6C00" />
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </View>
-    );
-  };
+  if (!user) return;
+
+  console.log("user---->", user);
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -128,14 +72,85 @@ const ProfileScreen = ({ navigation, route }) => {
         </View>
 
         <ScrollView nestedScrollEnabled={true}>
-          <View>
-            <FlatList
-              data={posts}
-              renderItem={renderItem}
-              keyExtractor={(item) => item.id}
-              style={styles.postList}
-              contentContainerStyle={styles.postListContent}
-            />
+          <View style={styles.postListContent}>
+            {posts.length ? (
+              posts.map((post) => {
+                return (
+                  <TouchableOpacity key={post.id} activeOpacity={1}>
+                    <View style={styles.postContainer}>
+                      <Image
+                        source={{ uri: `${post.image}` }}
+                        style={styles.postImage}
+                      />
+                      <View style={styles.postInfoContainer}>
+                        <Text style={styles.postTitle}>{post.title}</Text>
+                        <View style={styles.postInfo}>
+                          <View style={styles.postInfo}>
+                            <View style={styles.postComments}>
+                              <Text style={styles.postCommentsCount}>
+                                {post.comments.length}
+                              </Text>
+                              <TouchableOpacity
+                                activeOpacity={0.8}
+                                onPress={() => {
+                                  dispatch(setCurrentPostId(post.id));
+                                  navigation.navigate("Comments");
+                                }}
+                              >
+                                <Feather
+                                  name="message-circle"
+                                  size={18}
+                                  color="#FF6C00"
+                                  fill="#FFFFFF"
+                                  style={{
+                                    transform: [{ rotate: "270deg" }],
+                                    backgroundColor: "#FFFFFF",
+                                  }}
+                                />
+                              </TouchableOpacity>
+                            </View>
+                            <View style={styles.postLikes}>
+                              <Text style={styles.postLikesCount}>
+                                {post.likes}
+                              </Text>
+                              <TouchableOpacity activeOpacity={0.8}>
+                                <Feather
+                                  name="thumbs-up"
+                                  size={18}
+                                  color="#FF6C00"
+                                />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                          {post.location ? (
+                            <View style={styles.postLocation}>
+                              <Text style={styles.postLocationText}>
+                                {post.location.country}
+                              </Text>
+                              <SimpleLineIcons
+                                name="location-pin"
+                                size={18}
+                                color="#BDBDBD"
+                                onPress={() => {
+                                  navigation.navigate("Map", {
+                                    coordinates: post.location.coordinates,
+                                    region: post.location.region,
+                                  });
+                                }}
+                              />
+                            </View>
+                          ) : (
+                            <View></View>
+                          )}
+                        </View>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                );
+              })
+            ) : (
+              <Text>No posts yet^^</Text>
+            )}
           </View>
         </ScrollView>
       </ImageBackground>
