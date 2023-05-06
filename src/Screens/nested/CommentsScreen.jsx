@@ -20,8 +20,6 @@ import { addComment } from "../../redux/postsOperations";
 
 import { Feather, AntDesign } from "@expo/vector-icons";
 
-import Button from "../../components/Button";
-
 const windowHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
 
@@ -113,7 +111,7 @@ const CommentsScreen = ({ navigation }) => {
             strokeWidth={1}
           />
         </TouchableOpacity>
-        <Text style={styles.headerText}>Комментарии</Text>
+        <Text style={styles.headerText}>Comments</Text>
       </View>
       <View style={styles.screenContainer}>
         <View style={styles.imageWrapper}>
@@ -137,7 +135,7 @@ const CommentsScreen = ({ navigation }) => {
               </View>
             </ScrollView>
           ) : (
-            <Text style={{ alignSelf: "center" }}>No comments</Text>
+            <Text style={{ alignSelf: "center" }}>No comments yet^^</Text>
           )}
         </View>
         <View style={styles.inputContainer}>

@@ -21,7 +21,7 @@ import { SimpleLineIcons, Feather } from "@expo/vector-icons";
 const windowHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
 
-const ProfileScreen = ({ navigation, route }) => {
+const ProfileScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const uid = useSelector(selectUID);
@@ -35,7 +35,7 @@ const ProfileScreen = ({ navigation, route }) => {
 
   if (!user) return;
 
-  console.log("user---->", user);
+  // console.log("user---->", user);
   return (
     <View style={styles.container}>
       <ImageBackground

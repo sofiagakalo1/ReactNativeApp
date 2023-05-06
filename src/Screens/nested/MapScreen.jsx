@@ -17,7 +17,7 @@ const MapScreen = ({ navigation, route }) => {
     coordinates: { latitude, longitude },
     region,
   } = route.params;
-  console.log("GET-MAP-route.params------>", route.params);
+  // console.log("GET-MAP-route.params------>", route.params);
   return (
     <View style={styles.container}>
       <MapView

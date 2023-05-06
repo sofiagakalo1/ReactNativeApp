@@ -70,7 +70,7 @@ const RegistrationScreen = ({ navigation }) => {
               }}
             >
               <View style={styles.header}>
-                <Text style={styles.headerText}>Войти</Text>
+                <Text style={styles.headerText}>Log in</Text>
               </View>
               <View style={{ marginTop: 16 }}>
                 <TextInput
@@ -79,7 +79,7 @@ const RegistrationScreen = ({ navigation }) => {
                       ? [styles.input, styles.inputFocused]
                       : styles.input
                   }
-                  placeholder="Адрес электронной почты"
+                  placeholder="Email address..."
                   placeholderTextColor="#BDBDBD"
                   value={state.email}
                   onFocus={() => handleInputFocus("email")}
@@ -110,7 +110,7 @@ const RegistrationScreen = ({ navigation }) => {
                   style={styles.showPasswordButton}
                   styleForButton={styles.showPasswordBtn}
                   styleForText={styles.showPasswordBtnText}
-                  text={isShowPassword ? "Скрыть" : "Показать"}
+                  text={isShowPassword ? "Hide" : "Show"}
                   onPress={() => setIsShowPassword(!isShowPassword)}
                 />
               </View>
@@ -124,7 +124,7 @@ const RegistrationScreen = ({ navigation }) => {
                 <Button
                   styleForButton={styles.linkBtn}
                   styleForText={styles.linkBtnText}
-                  text={"Нет аккаунта? Зарегистрироваться"}
+                  text={"Don't have an account? Sign up!"}
                   onPress={() => navigation.navigate("Registration")}
                 />
               </View>
