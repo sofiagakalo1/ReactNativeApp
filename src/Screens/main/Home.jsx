@@ -1,9 +1,6 @@
 import React from "react";
-import { useNavigation, useRoute } from "@react-navigation/native";
 
 import "react-native-gesture-handler";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
 
 import CreatePostsScreen from "./CreatePostsScreen";
 import MapScreen from "../nested/MapScreen";

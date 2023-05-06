@@ -3,7 +3,6 @@ import React from 'react';
 import { useState } from 'react';
 
 import { NavigationContainer } from "@react-navigation/native";
-// import { createStackNavigator } from "@react-navigation/stack";
 
 import { auth } from './src/firebase/config';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -13,9 +12,7 @@ import { useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
 SplashScreen.preventAutoHideAsync();
 
-// import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
-// import { Text } from "react-native";
 import { store } from "./src/redux/store";
 
 import routes from "./src/routes";

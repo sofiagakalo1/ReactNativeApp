@@ -18,17 +18,14 @@ import { selectUser, selectUID } from "../../redux/authSelectors";
 import { selectPosts, selectCurrentPostId } from "../../redux/postsSelector";
 import { addComment } from "../../redux/postsOperations";
 
-import {
-  Feather,
-  AntDesign,
-} from "@expo/vector-icons";
+import { Feather, AntDesign } from "@expo/vector-icons";
 
 import Button from "../../components/Button";
 
 const windowHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
 
-const CommentsScreen = ({ route, navigation }) => {
+const CommentsScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const { name } = useSelector(selectUser);
   const uid = useSelector(selectUID);

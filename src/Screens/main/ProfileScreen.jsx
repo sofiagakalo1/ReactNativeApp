@@ -7,7 +7,6 @@ import {
   Dimensions,
   ImageBackground,
   TouchableOpacity,
-  FlatList,
   Image,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
@@ -280,30 +279,3 @@ const styles = StyleSheet.create({
 });
 
 export default ProfileScreen;
-
-// const userPosts = [
-//   {
-//     id: "1",
-//     photo: require("../../images/my-post-1.jpeg"),
-//     title: "Лес",
-//     location: "Ukraine",
-//     comments: "32",
-//     likes: "50",
-//   },
-//   {
-//     id: "2",
-//     photo: require("../../images/my-post-2.jpeg"),
-//     title: "Закат на Черном море",
-//     location: "Ukraine",
-//     comments: "88",
-//     likes: "32",
-//   },
-//   {
-//     id: "3",
-//     photo: require("../../images/my-post-3.jpeg"),
-//     title: "Старый домик в Венеции",
-//     location: "Italy",
-//     comments: "98",
-//     likes: "32",
-//   },
-// ];

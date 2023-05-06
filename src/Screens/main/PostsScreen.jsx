@@ -7,7 +7,6 @@ import {
   Image,
   ScrollView,
   Dimensions,
-  FlatList,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { selectUser, selectUID } from "../../redux/authSelectors";
@@ -124,48 +123,6 @@ const PostsScreen = ({ navigation, route }) => {
     </View>
   );
 };
-// const renderItem = ({ item }) => {
-//   return (
-//     <View style={styles.postContainer}>
-//       <Image source={item.photo} style={styles.postImage} />
-//       <View style={styles.postInfoContainer}>
-//         <Text style={styles.postTitle}>{item.title}</Text>
-//         <View style={styles.postInfo}>
-//           <View style={styles.postComments}>
-//             <Text style={styles.postCommentsCount}>{item.comments}</Text>
-//             <SimpleLineIcons
-//               onPress={() => navigation.navigate("Comments", item)}
-//               style={{
-//                 transform: [{ rotateY: "180deg" }],
-//               }}
-//               name="bubble"
-//               size={18}
-//               color="#BDBDBD"
-//             />
-//           </View>
-//           <View style={styles.postLocation}>
-//             <Text style={styles.postLocationText}>{item.location}</Text>
-//             <SimpleLineIcons
-//               name="location-pin"
-//               size={18}
-//               color="#BDBDBD"
-//               onPress={() => navigation.navigate("Map", item)}
-//             />
-//           </View>
-//         </View>
-//       </View>
-//     </View>
-//   );
-// };
-{
-  /* <FlatList
-    data={Object.values(myPost)}
-    renderItem={renderItem}
-    keyExtractor={(item) => item.id}
-    style={styles.postList}
-    contentContainerStyle={styles.postListContent}
-  /> */
-}
 
 const styles = StyleSheet.create({
   container: {

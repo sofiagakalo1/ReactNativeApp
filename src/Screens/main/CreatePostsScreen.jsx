@@ -5,9 +5,7 @@ import {
   View,
   TouchableOpacity,
   Image,
-  ScrollView,
   Dimensions,
-  FlatList,
   TextInput,
 } from "react-native";
 import uuid from "react-native-uuid";
@@ -21,7 +19,6 @@ import { addPost } from "../../redux/postsOperations";
 import {
   SimpleLineIcons,
   Feather,
-  AntDesign,
   MaterialIcons,
 } from "@expo/vector-icons";
 
@@ -45,9 +42,6 @@ const CreatePostsScreen = ({ navigation, route }) => {
   const [hasCameraPermission, setCameraHasPermission] =
     Camera.useCameraPermissions();
   const [hasLocationPermission, setHasLocationPermission] = useState(null);
-  // const [image, setImage] = useState(null);
-  // const [title, setTitle] = useState("");
-  // const [location, setLocation] = useState(``);
   const [isFocused, setIsFocused] = useState({
     title: false,
     location: false,

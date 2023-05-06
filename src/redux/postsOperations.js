@@ -23,8 +23,6 @@ const fetchAllPosts = createAsyncThunk(
 
         posts.push(post);
       });
-
-    //   console.log(posts);
       return posts;
     } catch (error) {
       console.log(error.message);
@@ -99,4 +97,4 @@ const setCurrentPostId = createAction("posts/setCurrentPostId", (id) => ({
   payload: { id },
 }));
 
-export { fetchAllPosts, addPost, addComment, addLike };
+export { fetchAllPosts, addPost, addComment, addLike, setCurrentPostId };

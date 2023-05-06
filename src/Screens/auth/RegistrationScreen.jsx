@@ -37,9 +37,7 @@ const RegistrationScreen = ({ navigation }) => {
   const handleSubmit = () => {
     Keyboard.dismiss();
     setIsShowKeyboard(false);
-    // console.log(state);
     dispatch(registerUser(state));
-    // navigation.navigate("Home");
     setState(initialState);
   };
 

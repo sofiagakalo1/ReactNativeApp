@@ -7,8 +7,7 @@ import {
   Dimensions,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import { SimpleLineIcons, Feather } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { Feather } from "@expo/vector-icons";
 
 const windowHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
