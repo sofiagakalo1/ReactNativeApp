@@ -226,7 +226,6 @@ const CreatePostsScreen = ({ navigation, route }) => {
             style={[styles.input, styles.locationInput]}
             placeholder="Местность..."
             placeholderTextColor={"#BDBDBD"}
-            editable={false}
             value={
               post.location
                 ? `${post.location.region}, ${post.location.country}`
