@@ -34,6 +34,7 @@ export const registerUser = createAsyncThunk(
 
       return userData;
     } catch (error) {
+      Alert(error.message);
       console.log("register error", error.message);
       return rejectWithValue(error.message);
     }
@@ -58,6 +59,7 @@ export const logInUser = createAsyncThunk(
 
       return userData;
     } catch (error) {
+      Alert(error.message);
       console.log("login error", error.message);
       return rejectWithValue(error.message);
     }
@@ -70,6 +72,7 @@ export const logOutUser = createAsyncThunk(
     try {
       await signOut(auth);
     } catch (error) {
+      Alert(error.message);
       console.log("logout error ", error.message);
       return rejectWithValue(error.message);
     }
@@ -89,6 +92,7 @@ export const userProfileUpdate = () => async (dispatch, _) => {
       dispatch(logIn(userData));
     });
   } catch (error) {
+    Alert(error.message);
     console.log("4: ", error.message);
     return rejectWithValue(error.message);
   }

@@ -25,6 +25,7 @@ const PostsScreen = ({ navigation, route }) => {
   const user = useSelector(selectUser);
   const uid = useSelector(selectUID);
   const { posts } = useSelector(selectPosts);
+  const userPosts = posts.filter((post) => post.userId === uid);
 
   useEffect(() => {}, []);
 
@@ -60,8 +61,8 @@ const PostsScreen = ({ navigation, route }) => {
       </View>
       <ScrollView nestedScrollEnabled={true}>
         <View style={styles.postListContent}>
-          {posts.length ? (
-            posts.map((post) => {
+          {userPosts.length ? (
+            userPosts.map((post) => {
               return (
                 <TouchableOpacity key={post.id} activeOpacity={1}>
                   <View style={styles.postContainer}>
