@@ -7,6 +7,7 @@ import {
   signOut,
 } from "firebase/auth";
 import { auth } from "../firebase/config";
+import { AlertModal } from "../components/Alert";
 
 export const registerUser = createAsyncThunk(
   "auth/registerUser",
@@ -34,8 +35,11 @@ export const registerUser = createAsyncThunk(
 
       return userData;
     } catch (error) {
-      Alert(error.message);
-      console.log("register error", error.message);
+      // console.log("error.message------>", error.message.split(": ")[1]);
+      AlertModal({
+        errorName: "register error",
+        errorText: error.message.split(": ")[1],
+      });
       return rejectWithValue(error.message);
     }
   }
@@ -59,8 +63,11 @@ export const logInUser = createAsyncThunk(
 
       return userData;
     } catch (error) {
-      Alert(error.message);
-      console.log("login error", error.message);
+      AlertModal({
+        errorName: "login error",
+        errorText: error.message.split(": ")[1],
+      });
+      // console.log("login error", error.message);
       return rejectWithValue(error.message);
     }
   }
@@ -72,8 +79,11 @@ export const logOutUser = createAsyncThunk(
     try {
       await signOut(auth);
     } catch (error) {
-      Alert(error.message);
-      console.log("logout error ", error.message);
+      AlertModal({
+        errorName: "logout error",
+        errorText: error.message.split(": ")[1],
+      });
+      // console.log("logout error ", error.message);
       return rejectWithValue(error.message);
     }
   }
@@ -92,8 +102,11 @@ export const userProfileUpdate = () => async (dispatch, _) => {
       dispatch(logIn(userData));
     });
   } catch (error) {
-    Alert(error.message);
-    console.log("4: ", error.message);
+    AlertModal({
+      errorName: "update error",
+      errorText: error.message.split(": ")[1],
+    });
+    // console.log("4: ", error.message);
     return rejectWithValue(error.message);
   }
 };

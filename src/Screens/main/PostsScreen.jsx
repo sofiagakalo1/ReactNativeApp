@@ -145,7 +145,6 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-medium-500",
     fontSize: 17,
     lineHeight: 22,
-    fontWeight: 500,
     letterSpacing: -0.41,
     color: "#212121",
   },

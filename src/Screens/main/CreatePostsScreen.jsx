@@ -16,27 +16,23 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectUID } from "../../redux/authSelectors";
 import { addPost } from "../../redux/postsOperations";
 
-import {
-  SimpleLineIcons,
-  Feather,
-  MaterialIcons,
-} from "@expo/vector-icons";
+import { SimpleLineIcons, Feather, MaterialIcons } from "@expo/vector-icons";
 
 import Button from "../../components/Button";
 
 const windowHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
 
-const CreatePostsScreen = ({ navigation, route }) => {
+const CreatePostsScreen = ({ navigation}) => {
   const dispatch = useDispatch();
   const uid = useSelector(selectUID);
   const [post, setPost] = useState({
-    image:null,
-    title:"",
+    image: null,
+    title: "",
     comments: [],
     likesCount: 0,
     location: "",
-    id:null,
+    id: null,
   });
   const [cameraRef, setCameraRef] = useState(null);
   const [hasCameraPermission, setCameraHasPermission] =
@@ -137,7 +133,7 @@ const CreatePostsScreen = ({ navigation, route }) => {
       comments: [],
       likesCount: 0,
       location: null,
-      id:null,
+      id: null,
     });
   };
 
@@ -285,7 +281,6 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-medium-500",
     fontSize: 17,
     lineHeight: 22,
-    fontWeight: 500,
     letterSpacing: -0.41,
     color: "#212121",
   },
