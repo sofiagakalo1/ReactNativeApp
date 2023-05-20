@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Spinner from "react-native-loading-spinner-overlay";
 import {
   StyleSheet,
   Text,
@@ -25,6 +26,7 @@ const initialState = {
 
 const RegistrationScreen = ({ navigation }) => {
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
   const [state, setState] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -34,10 +36,17 @@ const RegistrationScreen = ({ navigation }) => {
     password: false,
   });
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     Keyboard.dismiss();
     setIsShowKeyboard(false);
-    dispatch(registerUser(state));
+    setIsLoading(true);
+    try {
+      await dispatch(registerUser(state));
+    } catch (error) {
+      console.log(error.message);
+    } finally {
+      setIsLoading(false);
+    }
     setState(initialState);
   };
 
@@ -66,96 +75,102 @@ const RegistrationScreen = ({ navigation }) => {
           source={require("../../images/registrationbg.jpg")}
           style={styles.image}
         >
-          <KeyboardAvoidingView behavior={"padding"}>
-            <View
-              style={{
-                ...styles.form,
-                marginBottom: isShowKeyboard ? -90 : 0,
-              }}
-            >
-              <View style={styles.header}>
-                <View style={styles.photoBox}>
-                  <TouchableOpacity style={styles.addBtn} activeOpacity={0.8}>
-                    <AddAvatarPhotoButtonIcon />
-                  </TouchableOpacity>
+          <View>
+            <Spinner visible={isLoading} />
+            <KeyboardAvoidingView behavior={"padding"}>
+              <View
+                style={{
+                  ...styles.form,
+                  marginBottom: isShowKeyboard ? -90 : 0,
+                }}
+              >
+                <View style={styles.header}>
+                  <View style={styles.photoBox}>
+                    <TouchableOpacity style={styles.addBtn} activeOpacity={0.8}>
+                      <AddAvatarPhotoButtonIcon />
+                    </TouchableOpacity>
+                  </View>
+                  <Text style={styles.headerText}>Registration</Text>
                 </View>
-                <Text style={styles.headerText}>Registration</Text>
+                <View>
+                  <TextInput
+                    style={
+                      isFocused.name
+                        ? [styles.input, styles.inputFocused]
+                        : styles.input
+                    }
+                    placeholder="Name"
+                    placeholderTextColor="#BDBDBD"
+                    value={state.name}
+                    onFocus={() => handleInputFocus("login")}
+                    onBlur={() => handleInputBlur("login")}
+                    onChangeText={(value) => {
+                      setState((prevState) => ({ ...prevState, name: value }));
+                    }}
+                  />
+                </View>
+                <View style={{ marginTop: 16 }}>
+                  <TextInput
+                    style={
+                      isFocused.email
+                        ? [styles.input, styles.inputFocused]
+                        : styles.input
+                    }
+                    placeholder="Email"
+                    placeholderTextColor="#BDBDBD"
+                    value={state.email}
+                    onFocus={() => handleInputFocus("email")}
+                    onBlur={() => handleInputBlur("email")}
+                    onChangeText={(value) => {
+                      setState((prevState) => ({ ...prevState, email: value }));
+                    }}
+                  />
+                </View>
+                <View style={{ marginTop: 16 }}>
+                  <TextInput
+                    style={
+                      isFocused.password
+                        ? [styles.input, styles.inputFocused]
+                        : styles.input
+                    }
+                    placeholder="Password"
+                    placeholderTextColor="#BDBDBD"
+                    value={state.password}
+                    onFocus={() => handleInputFocus("password")}
+                    onBlur={() => handleInputBlur("password")}
+                    onChangeText={(value) =>
+                      setState((prevState) => ({
+                        ...prevState,
+                        password: value,
+                      }))
+                    }
+                    secureTextEntry={isShowPassword ? false : true}
+                  />
+                  <Button
+                    style={styles.showPasswordButton}
+                    styleForButton={styles.showPasswordBtn}
+                    styleForText={styles.showPasswordBtnText}
+                    text={isShowPassword ? "Hide" : "Show"}
+                    onPress={() => setIsShowPassword(!isShowPassword)}
+                  />
+                </View>
+                <View>
+                  <Button
+                    styleForButton={styles.registerBtn}
+                    styleForText={styles.registerBtnText}
+                    text={"Sign up"}
+                    onPress={handleSubmit}
+                  />
+                  <Button
+                    styleForButton={styles.linkBtn}
+                    styleForText={styles.linkBtnText}
+                    text={"Already have an account? Sign in!"}
+                    onPress={() => navigation.navigate("Login")}
+                  />
+                </View>
               </View>
-              <View>
-                <TextInput
-                  style={
-                    isFocused.name
-                      ? [styles.input, styles.inputFocused]
-                      : styles.input
-                  }
-                  placeholder="Name"
-                  placeholderTextColor="#BDBDBD"
-                  value={state.name}
-                  onFocus={() => handleInputFocus("login")}
-                  onBlur={() => handleInputBlur("login")}
-                  onChangeText={(value) => {
-                    setState((prevState) => ({ ...prevState, name: value }));
-                  }}
-                />
-              </View>
-              <View style={{ marginTop: 16 }}>
-                <TextInput
-                  style={
-                    isFocused.email
-                      ? [styles.input, styles.inputFocused]
-                      : styles.input
-                  }
-                  placeholder="Email"
-                  placeholderTextColor="#BDBDBD"
-                  value={state.email}
-                  onFocus={() => handleInputFocus("email")}
-                  onBlur={() => handleInputBlur("email")}
-                  onChangeText={(value) => {
-                    setState((prevState) => ({ ...prevState, email: value }));
-                  }}
-                />
-              </View>
-              <View style={{ marginTop: 16 }}>
-                <TextInput
-                  style={
-                    isFocused.password
-                      ? [styles.input, styles.inputFocused]
-                      : styles.input
-                  }
-                  placeholder="Password"
-                  placeholderTextColor="#BDBDBD"
-                  value={state.password}
-                  onFocus={() => handleInputFocus("password")}
-                  onBlur={() => handleInputBlur("password")}
-                  onChangeText={(value) =>
-                    setState((prevState) => ({ ...prevState, password: value }))
-                  }
-                  secureTextEntry={isShowPassword ? false : true}
-                />
-                <Button
-                  style={styles.showPasswordButton}
-                  styleForButton={styles.showPasswordBtn}
-                  styleForText={styles.showPasswordBtnText}
-                  text={isShowPassword ? "Hide" : "Show"}
-                  onPress={() => setIsShowPassword(!isShowPassword)}
-                />
-              </View>
-              <View>
-                <Button
-                  styleForButton={styles.registerBtn}
-                  styleForText={styles.registerBtnText}
-                  text={"Sign up"}
-                  onPress={handleSubmit}
-                />
-                <Button
-                  styleForButton={styles.linkBtn}
-                  styleForText={styles.linkBtnText}
-                  text={"Already have an account? Sign in!"}
-                  onPress={() => navigation.navigate("Login")}
-                />
-              </View>
-            </View>
-          </KeyboardAvoidingView>
+            </KeyboardAvoidingView>
+          </View>
         </ImageBackground>
       </View>
     </TouchableWithoutFeedback>
